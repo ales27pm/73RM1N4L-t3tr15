@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "Netsight",
+    "slug": "netsight",
+    "scheme": "netsight",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "icon": "./assets/app-icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "backgroundColor": "#050b1f",
+      "resizeMode": "contain"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.netsight",
+      "splash": {
+        "image": "./assets/splash.png",
+        "backgroundColor": "#050b1f",
+        "resizeMode": "contain"
+      }
+    },
+    "android": {
+      "edgeToEdgeEnabled": true,
+      "package": "com.anonymous.netsight",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/app-icon.png",
+        "backgroundColor": "#050b1f"
+      }
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
