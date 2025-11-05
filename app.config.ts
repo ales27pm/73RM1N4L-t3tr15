@@ -32,6 +32,9 @@ const appConfig: ExpoConfig = {
     },
   },
   extra: {
+    eas: {
+      projectId: "0661cabd-28d1-403d-ad26-212dddd78e58",
+    },
     environment: process.env.EXPO_PUBLIC_APP_ENVIRONMENT ?? "development",
     leaderboardSyncUrl: process.env.EXPO_PUBLIC_LEADERBOARD_SYNC_URL ?? "https://cdn.reactt3tr15.com/leaderboard.json",
     rewardWebhookUrl: process.env.EXPO_PUBLIC_REWARD_WEBHOOK_URL ?? "https://hooks.reactt3tr15.com/rewards",
