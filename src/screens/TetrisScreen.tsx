@@ -300,6 +300,18 @@ export default function TetrisScreen() {
       runOnJS(stopSlash)();
     });
 
+  // Two-finger tap for rotation
+  const twoFingerTap = Gesture.Tap()
+    .numberOfTaps(1)
+    .maxDuration(300)
+    .minPointers(2)
+    .onEnd(() => {
+      if (pausedSV.value || gameOverSV.value) return;
+      runOnJS(rotatePiece)();
+      runOnJS(hapticMedium)();
+      runOnJS(playSfx)("rotate");
+    });
+
   // Fling gestures for quick actions
   const flingUp = Gesture.Fling()
     .direction(Directions.UP)
@@ -316,7 +328,7 @@ export default function TetrisScreen() {
       runOnJS(hapticLight)();
     });
 
-  const composedGesture = Gesture.Exclusive(pan, flingUp, flingDown);
+  const composedGesture = Gesture.Exclusive(twoFingerTap, pan, flingUp, flingDown);
 
   const gridAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -696,59 +708,9 @@ export default function TetrisScreen() {
         </View>
       </View>
 
-      {/* Modern Touch Controls */}
-      <View style={styles.controlsContainer}>
-        <View style={styles.controlsRow}>
-          {/* Left: Big Rotate Button */}
-          <Pressable
-            style={({ pressed }) => [styles.rotateButton, pressed && styles.rotateButtonPressed]}
-            onPress={handleRotate}
-          >
-            <MaterialCommunityIcons name="rotate-right" size={48} color={TERMINAL_BG} />
-            <Text style={styles.rotateButtonText}>ROTATE</Text>
-          </Pressable>
-
-          {/* Center: Swipe Zone Hint */}
-          <View style={styles.swipeZone}>
-            <MaterialCommunityIcons name="gesture-swipe" size={28} color={TERMINAL_GREEN} />
-            <Text style={styles.swipeZoneText}>Swipe on board{"\n"}to move & drop</Text>
-          </View>
-
-          {/* Right: Action Buttons */}
-          <View style={styles.actionButtons}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.actionButton,
-                !canHold && styles.actionButtonDisabled,
-                pressed && styles.actionButtonPressed,
-              ]}
-              onPress={() => {
-                if (canHold) {
-                  holdSwap();
-                  if (enableSfx) playSfx("hold");
-                  if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(10);
-                }
-              }}
-              disabled={!canHold}
-            >
-              <MaterialCommunityIcons name="swap-horizontal" size={28} color={canHold ? TERMINAL_GREEN : "#003300"} />
-              <Text style={[styles.actionButtonText, !canHold && styles.actionButtonTextDisabled]}>HOLD</Text>
-            </Pressable>
-
-            <Pressable
-              style={({ pressed }) => [styles.dropButton, pressed && styles.dropButtonPressed]}
-              onPress={handleHardDrop}
-            >
-              <MaterialCommunityIcons name="arrow-collapse-down" size={32} color={TERMINAL_BG} />
-              <Text style={styles.dropButtonText}>DROP</Text>
-            </Pressable>
-          </View>
-        </View>
-      </View>
-
       {showHints && (
         <View style={styles.hintsOverlay}>
-          <Text style={styles.hintText}>Swipe board to move pieces • Tap ROTATE button to spin</Text>
+          <Text style={styles.hintText}>Swipe to move • Two-finger tap to rotate • Swipe up to drop</Text>
           <Pressable onPress={hideHints} style={styles.hintDismiss}>
             <Text style={styles.hintDismissText}>×</Text>
           </Pressable>
