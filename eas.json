@@ -14,9 +14,11 @@
       "distribution": "internal"
     },
     "production": {
+      "credentialsSource": "remote",
       "env": {},
       "ios": {
-        "distribution": "store"
+        "distribution": "store",
+        "autoIncrement": true
       },
       "android": {
         "distribution": "store"
