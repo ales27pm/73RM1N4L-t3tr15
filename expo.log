@@ -4,24 +4,17 @@ Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 1063ms index.ts (1808 modules)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 62ms index.ts (1 module)
+iOS Bundled 1103ms index.ts (1868 modules)
+iOS Bundled 49ms index.ts (1 module)
+iOS Bundled 43ms index.ts (1 module)
  INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:24:18.230Z"}
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:26:54.228Z"}
  INFO  [RN:INFO:main-loop] Session started
  INFO  [RN:INFO:navigation] Onboarding completed: true
- WARN  Cannot record touch move without a touch start.
-Touch Move: %s
-Touch Bank: %s {"identifier":1,"pageX":252,"pageY":551.6666666666666,"timestamp":38065543.96841666} [{"touchActive":true,"startPageX":272,"startPageY":209.66666666666666,"startTimeStamp":38065506.46241667,"currentPageX":272,"currentPageY":209.66666666666666,"currentTimeStamp":38065506.46241667,"previousPageX":272,"previousPageY":209.66666666666666,"previousTimeStamp":38065506.46241667}]
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 26, "endedAt": "2025-11-05T05:24:43.831Z", "rewardsUnlocked": 0, "sessionCount": 20, "streak": 20}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 26s
-iOS Bundled 54ms index.ts (1 module)
- INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:24:46.501Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:navigation] Onboarding completed: true
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 67, "endedAt": "2025-11-05T05:25:53.818Z", "rewardsUnlocked": 0, "sessionCount": 21, "streak": 21}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 67s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:25:53.820Z"}
+ WARN  Ended a touch event which was not counted in `trackedTouchCount`.
+ WARN  Ended a touch event which was not counted in `trackedTouchCount`.
+ WARN  Ended a touch event which was not counted in `trackedTouchCount`.
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 120, "endedAt": "2025-11-05T05:28:54.613Z", "rewardsUnlocked": 0, "sessionCount": 23, "streak": 23}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 120s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:28:55.163Z"}
  INFO  [RN:INFO:main-loop] Session started
