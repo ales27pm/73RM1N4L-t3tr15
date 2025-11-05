@@ -187,6 +187,7 @@ This script will:
 - Module map file not found errors
 - Header search path resolution issues
 - Linker command failures with exit code 1
+- libdav1d assembly compilation errors with C++ headers
 
 **Podfile Fixes Applied:**
 The Podfile includes several post-install fixes for React Native modules:
@@ -194,6 +195,7 @@ The Podfile includes several post-install fixes for React Native modules:
 - Swift include paths for proper module resolution
 - Module map configuration for bridging headers
 - Precompiled header optimization for React Native targets
+- libdav1d assembly file isolation to prevent C++ header conflicts
 
 **EAS Build Configuration:**
 For EAS cloud builds, a prebuild hook (`scripts/eas-prebuild-ios.sh`) automatically cleans caches before building to prevent module map conflicts.
