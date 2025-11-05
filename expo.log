@@ -22,3 +22,7 @@ iOS Bundled 61ms index.ts (1 module)
  INFO  [RN:INFO:navigation] Onboarding completed: true
  INFO  [RN:INFO:session] Session completed {"durationSeconds": 7, "endedAt": "2025-11-05T05:22:37.416Z", "rewardsUnlocked": 0, "sessionCount": 18, "streak": 18}
  INFO  [RN:INFO:main-loop] Session ended (background) after 7s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:23:32.582Z"}
+ INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 2, "endedAt": "2025-11-05T05:23:34.864Z", "rewardsUnlocked": 0, "sessionCount": 19, "streak": 19}
+ INFO  [RN:INFO:main-loop] Session ended (manual) after 2s

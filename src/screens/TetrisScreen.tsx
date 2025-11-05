@@ -309,7 +309,7 @@ export default function TetrisScreen() {
       if (pausedSV.value || gameOverSV.value) return;
       runOnJS(rotatePiece)();
       runOnJS(hapticMedium)();
-      runOnJS(playSfx)("rotate");
+      if (enableSfx) runOnJS(playSfx)("rotate");
     });
 
   // Fling gestures for quick actions
