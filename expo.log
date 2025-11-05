@@ -1,34 +1,49 @@
 + exec gosu vibecode node node_modules/.bin/expo start --localhost
-env: load .env
-env: export GITHUB_TOKEN
 Starting project at /home/user/workspace
 Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 1168ms index.ts (1791 modules)
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 62ms index.ts (1 module)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 3213ms index.ts (1872 modules)
+iOS ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.7% (1869/1872)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 3249ms index.ts (1 module)
+iOS Bundled 3289ms index.ts (1 module)
+iOS Bundled 3329ms index.ts (1 module)
+iOS Bundled 3370ms index.ts (1 module)
+iOS Bundled 3411ms index.ts (1 module)
+iOS Bundled 3452ms index.ts (1 module)
+iOS Bundled 3495ms index.ts (1 module)
+iOS Bundled 3536ms index.ts (1 module)
+iOS Bundled 3577ms index.ts (1 module)
+iOS Bundled 3622ms index.ts (1 module)
+iOS Bundled 3666ms index.ts (1 module)
  INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:03:32.845Z"}
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:22:16.642Z"}
  INFO  [RN:INFO:main-loop] Session started
  INFO  [RN:INFO:navigation] Onboarding completed: true
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 4, "endedAt": "2025-11-05T20:03:36.582Z", "rewardsUnlocked": 0, "sessionCount": 99, "streak": 99}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 4s
-iOS Bundled 47ms index.ts (1 module)
-iOS Bundled 43ms index.ts (1 module)
-iOS Bundled 102ms index.ts (1 module)
- INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:03:46.320Z"}
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 12, "endedAt": "2025-11-05T20:22:28.970Z", "rewardsUnlocked": 0, "sessionCount": 111, "streak": 111}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 12s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:23:02.526Z"}
  INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:navigation] Onboarding completed: true
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 35, "endedAt": "2025-11-05T20:04:21.146Z", "rewardsUnlocked": 0, "sessionCount": 100, "streak": 100}
- INFO  [RN:INFO:main-loop] Session ended (background) after 35s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:04:24.886Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 1, "endedAt": "2025-11-05T20:04:25.330Z", "rewardsUnlocked": 0, "sessionCount": 101, "streak": 101}
- INFO  [RN:INFO:main-loop] Session ended (background) after 1s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:04:26.751Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 1, "endedAt": "2025-11-05T20:04:26.778Z", "rewardsUnlocked": 0, "sessionCount": 102, "streak": 102}
- INFO  [RN:INFO:main-loop] Session ended (background) after 1s
