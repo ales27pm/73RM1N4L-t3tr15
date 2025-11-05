@@ -347,8 +347,11 @@ Built with ❤️ using React Native and Expo.
 
 ### Recent Fixes
 - **Notification Service**: Fixed NativeEventEmitter initialization error
-  - Moved `Notifications.setNotificationHandler()` call from module-level to app mount
-  - Created `initializeNotificationHandler()` function called in App.tsx useEffect
+  - Converted `expo-notifications` import to dynamic/lazy loading pattern
+  - Created `getNotifications()` helper using dynamic `import()` to defer module loading
+  - All notification functions now load expo-notifications only when actually called
   - Prevents "requires a non-null argument" error on app startup
-  - Ensures proper initialization timing after native modules are ready
+  - Ensures proper initialization timing - module only loads after native runtime is ready
+  - Uses type-only imports (`import type`) to maintain TypeScript type safety without triggering initialization
+  - App.tsx uses `InteractionManager.runAfterInteractions()` for optimal initialization timing
 

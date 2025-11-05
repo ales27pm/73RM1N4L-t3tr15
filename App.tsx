@@ -3,8 +3,9 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useEffect } from "react";
+import { InteractionManager } from "react-native";
 import AppNavigator from "./src/navigation/AppNavigator";
-import { initializeNotificationHandler } from "./src/notifications/notificationService";
+import { logError } from "./src/utils/logger";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -29,8 +30,20 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 
 export default function App() {
   useEffect(() => {
-    // Initialize notification handler after app is mounted
-    initializeNotificationHandler();
+    // Wait for all interactions to complete before initializing notification handler
+    // This ensures native modules are fully ready
+    const task = InteractionManager.runAfterInteractions(() => {
+      // Use dynamic import to defer loading expo-notifications until after interactions
+      import("./src/notifications/notificationService")
+        .then(({ initializeNotificationHandler }) => {
+          initializeNotificationHandler();
+        })
+        .catch((err) => {
+          logError("Failed to initialize notification handler", { context: "app" }, err);
+        });
+    });
+
+    return () => task.cancel();
   }, []);
 
   return (
