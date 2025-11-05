@@ -4,46 +4,4 @@ Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 3213ms index.ts (1872 modules)
-iOS ./index.ts ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░ 99.7% (1869/1872)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 3249ms index.ts (1 module)
-iOS Bundled 3289ms index.ts (1 module)
-iOS Bundled 3329ms index.ts (1 module)
-iOS Bundled 3370ms index.ts (1 module)
-iOS Bundled 3411ms index.ts (1 module)
-iOS Bundled 3452ms index.ts (1 module)
-iOS Bundled 3495ms index.ts (1 module)
-iOS Bundled 3536ms index.ts (1 module)
-iOS Bundled 3577ms index.ts (1 module)
-iOS Bundled 3622ms index.ts (1 module)
-iOS Bundled 3666ms index.ts (1 module)
- INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:22:16.642Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:navigation] Onboarding completed: true
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 12, "endedAt": "2025-11-05T20:22:28.970Z", "rewardsUnlocked": 0, "sessionCount": 111, "streak": 111}
- INFO  [RN:INFO:main-loop] Session ended (background) after 12s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T20:23:02.526Z"}
- INFO  [RN:INFO:main-loop] Session started
+iOS Bundled 1552ms index.ts (1853 modules)
