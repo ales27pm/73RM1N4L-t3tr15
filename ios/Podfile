@@ -48,15 +48,6 @@ target 'Netsight' do
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false'
   )
 
-  pre_install do |installer|
-    # Force static library build type for React and Yoga to prevent modular header issues
-    installer.pod_targets.each do |pod|
-      if ['React-Core', 'React-rncore', 'ReactCommon', 'RCT-Folly', 'Yoga'].include?(pod.name)
-        pod.build_type = Pod::BuildType.static_library
-      end
-    end
-  end
-
   post_install do |installer|
     react_native_post_install(
       installer,

@@ -192,8 +192,8 @@ This script will:
 
 **Podfile Fixes Applied:**
 The Podfile includes several critical fixes for React Native 0.79+ with New Architecture:
-- **Static library linkage** for React-Core, React-rncore, ReactCommon, RCT-Folly, and Yoga (via pre_install hook)
-- **Non-modular includes enabled** (`CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES=YES`) for Yoga and React pods
+- **Static framework linkage** (`use_frameworks! :linkage => :static`) to prevent module/header conflicts
+- **Non-modular includes enabled** (`CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES=YES`) for Yoga and React pods in post_install hook
 - Header search paths for RCTDeprecation and other RCT modules
 - Yoga header search paths for React Native 0.79+ layout engine
 - Swift include paths for proper module resolution
@@ -202,7 +202,7 @@ The Podfile includes several critical fixes for React Native 0.79+ with New Arch
 - libdav1d assembly file isolation to prevent C++ header conflicts
 
 **Why These Fixes Matter:**
-In React Native 0.79+ with New Architecture enabled, Yoga (the layout engine) headers must be accessible to ReactCommon compilation units. The default CocoaPods configuration may link React pods as modular frameworks, which hides the `<yoga/Yoga.h>` include path. Our Podfile forces static linkage and allows non-modular includes to ensure Yoga headers are visible.
+In React Native 0.79+ with New Architecture enabled, Yoga (the layout engine) headers must be accessible to ReactCommon compilation units. When using `use_frameworks!` with static linkage, CocoaPods enables modular headers automatically (via Expo's configuration). The `CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES=YES` setting ensures that ReactCommon can still access Yoga headers using the `<yoga/Yoga.h>` include style, preventing the "file not found" compilation error.
 
 **EAS Build Configuration:**
 For EAS cloud builds, a prebuild hook (`scripts/eas-prebuild-ios.sh`) automatically cleans caches before building to prevent module map conflicts.
