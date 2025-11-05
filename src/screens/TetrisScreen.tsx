@@ -31,8 +31,9 @@ import { playSfx, setSfxEnabled } from "../utils/sfx";
 import MatrixRain from "../components/MatrixRain";
 import { useMainLoop } from "../mainLoop/useMainLoop";
 
-const { width } = Dimensions.get("window");
-const BLOCK_SIZE = Math.min(width * 0.05, 20);
+const { width, height } = Dimensions.get("window");
+// Larger grid - use more screen space
+const BLOCK_SIZE = Math.min(width * 0.07, 28);
 const CELL = PixelRatio.roundToNearestPixel(BLOCK_SIZE);
 const PLAY_WIDTH = CELL * GRID_WIDTH;
 const PLAY_HEIGHT = CELL * GRID_HEIGHT;
@@ -312,27 +313,8 @@ export default function TetrisScreen() {
       if (enableSfx) runOnJS(playSfx)("rotate");
     });
 
-  // Fling gestures for quick actions
-  const flingUp = Gesture.Fling()
-    .direction(Directions.UP)
-    .onEnd(() => {
-      if (pausedSV.value || gameOverSV.value) return;
-      runOnJS(hardDrop)();
-      runOnJS(hapticStrong)();
-    });
-  const flingDown = Gesture.Fling()
-    .direction(Directions.DOWN)
-    .onEnd(() => {
-      if (pausedSV.value || gameOverSV.value) return;
-      runOnJS(dropPiece)();
-      runOnJS(hapticLight)();
-    });
-
-  // Allow two-finger tap and pan to work simultaneously, but flings are exclusive with pan
-  const composedGesture = Gesture.Simultaneous(
-    twoFingerTap,
-    Gesture.Exclusive(pan, flingUp, flingDown)
-  );
+  // Simple gesture composition - just pan and two-finger tap
+  const composedGesture = Gesture.Simultaneous(twoFingerTap, pan);
 
   const gridAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -671,50 +653,51 @@ export default function TetrisScreen() {
             </Animated.View>
           </GestureDetector>
         </View>
+      </View>
 
-        <View style={styles.rightPanel}>
-          <Pressable style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]} onPress={pauseGame}>
-            <Text style={styles.buttonText}>{paused ? "RESUME" : "PAUSE"}</Text>
-          </Pressable>
+      {/* Bottom Control Panel */}
+      <View style={styles.bottomPanel}>
+        <Pressable style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]} onPress={pauseGame}>
+          <Text style={styles.buttonText}>{paused ? "RESUME" : "PAUSE"}</Text>
+        </Pressable>
 
-          <Pressable style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]} onPress={resetGame}>
-            <Text style={styles.buttonText}>RESET</Text>
-          </Pressable>
+        <Pressable style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]} onPress={resetGame}>
+          <Text style={styles.buttonText}>RESET</Text>
+        </Pressable>
 
-          <Pressable
-            style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]}
-            onPress={toggleAsciiMode}
-          >
-            <Text style={styles.buttonText}>{asciiMode ? "ASCII ON" : "ASCII OFF"}</Text>
-          </Pressable>
+        <Pressable
+          style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]}
+          onPress={toggleAsciiMode}
+        >
+          <Text style={styles.buttonText}>{asciiMode ? "ASCII ON" : "ASCII OFF"}</Text>
+        </Pressable>
 
-          <Pressable
-            style={({ pressed }) => [
-              styles.controlButton,
-              { opacity: canHold ? 1 : 0.5 },
-              pressed && { opacity: 0.85 },
-            ]}
-            onPress={() => {
-              holdSwap();
-              if (enableSfx) playSfx("hold");
-            }}
-            disabled={!canHold}
-          >
-            <Text style={styles.buttonText}>HOLD</Text>
-          </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            styles.controlButton,
+            { opacity: canHold ? 1 : 0.5 },
+            pressed && { opacity: 0.85 },
+          ]}
+          onPress={() => {
+            holdSwap();
+            if (enableSfx) playSfx("hold");
+          }}
+          disabled={!canHold}
+        >
+          <Text style={styles.buttonText}>HOLD</Text>
+        </Pressable>
 
-          <Pressable
-            style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]}
-            onPress={() => setSettingsVisible(true)}
-          >
-            <Text style={styles.buttonText}>SETTINGS</Text>
-          </Pressable>
-        </View>
+        <Pressable
+          style={({ pressed }) => [styles.controlButton, pressed && { opacity: 0.85 }]}
+          onPress={() => setSettingsVisible(true)}
+        >
+          <Text style={styles.buttonText}>SETTINGS</Text>
+        </Pressable>
       </View>
 
       {showHints && (
         <View style={styles.hintsOverlay}>
-          <Text style={styles.hintText}>Swipe to move • Two-finger tap to rotate • Swipe up to drop</Text>
+          <Text style={styles.hintText}>Swipe to move left/right/down • Two-finger tap to rotate</Text>
           <Pressable onPress={hideHints} style={styles.hintDismiss}>
             <Text style={styles.hintDismissText}>×</Text>
           </Pressable>
@@ -848,6 +831,18 @@ const styles = StyleSheet.create({
   statText: { color: TERMINAL_GREEN, fontSize: 16, fontWeight: "bold" },
   gameArea: { flexDirection: "row", alignItems: "flex-start", gap: 20 },
   leftPanel: { alignItems: "center" },
+  rightPanel: { gap: 10 },
+  bottomPanel: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderTopWidth: 1,
+    borderTopColor: TERMINAL_DARK_GREEN,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
   nextPieceContainer: { alignItems: "center" },
   nextTitle: { color: TERMINAL_GREEN, fontSize: 16, fontWeight: "bold", marginBottom: 10 },
   nextPieceBox: {
@@ -881,7 +876,6 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 0 },
   },
   cell: { width: CELL, height: CELL },
-  rightPanel: { gap: 10 },
   controlButton: {
     backgroundColor: TERMINAL_DARK_GREEN,
     paddingHorizontal: 15,
