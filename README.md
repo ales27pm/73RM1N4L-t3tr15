@@ -186,18 +186,23 @@ This script will:
 - Module `RCTDeprecation` in AST file errors
 - Module map file not found errors
 - Header search path resolution issues
-- **'yoga/Yoga.h' file not found** (React Native 0.79+ Yoga layout engine)
+- **'yoga/Yoga.h' file not found** (React Native 0.79+ Yoga layout engine with New Architecture)
 - Linker command failures with exit code 1
 - libdav1d assembly compilation errors with C++ headers
 
 **Podfile Fixes Applied:**
-The Podfile includes several post-install fixes for React Native modules:
+The Podfile includes several critical fixes for React Native 0.79+ with New Architecture:
+- **Static library linkage** for React-Core, React-rncore, ReactCommon, RCT-Folly, and Yoga (via pre_install hook)
+- **Non-modular includes enabled** (`CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES=YES`) for Yoga and React pods
 - Header search paths for RCTDeprecation and other RCT modules
-- **Yoga header search paths** for React Native 0.79+ layout engine
+- Yoga header search paths for React Native 0.79+ layout engine
 - Swift include paths for proper module resolution
 - Module map configuration for bridging headers
 - Precompiled header optimization for React Native targets
 - libdav1d assembly file isolation to prevent C++ header conflicts
+
+**Why These Fixes Matter:**
+In React Native 0.79+ with New Architecture enabled, Yoga (the layout engine) headers must be accessible to ReactCommon compilation units. The default CocoaPods configuration may link React pods as modular frameworks, which hides the `<yoga/Yoga.h>` include path. Our Podfile forces static linkage and allows non-modular includes to ensure Yoga headers are visible.
 
 **EAS Build Configuration:**
 For EAS cloud builds, a prebuild hook (`scripts/eas-prebuild-ios.sh`) automatically cleans caches before building to prevent module map conflicts.

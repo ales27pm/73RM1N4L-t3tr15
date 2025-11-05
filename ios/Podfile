@@ -48,6 +48,15 @@ target 'Netsight' do
     :privacy_file_aggregation_enabled => podfile_properties['apple.privacyManifestAggregationEnabled'] != 'false'
   )
 
+  pre_install do |installer|
+    # Force static library build type for React and Yoga to prevent modular header issues
+    installer.pod_targets.each do |pod|
+      if ['React-Core', 'React-rncore', 'ReactCommon', 'RCT-Folly', 'Yoga'].include?(pod.name)
+        pod.build_type = Pod::BuildType.static_library
+      end
+    end
+  end
+
   post_install do |installer|
     react_native_post_install(
       installer,
@@ -59,6 +68,11 @@ target 'Netsight' do
     # Fix header search paths and module map for RCTDeprecation and other RN modules
     installer.pods_project.targets.each do |target|
       target.build_configurations.each do |config|
+        # Allow non-modular includes for Yoga and React pods (RN 0.79+ New Arch requirement)
+        if target.name == 'Yoga' || target.name.start_with?('React')
+          config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+        end
+
         # Fix libdav1d assembly compilation - exclude React Native headers
         if target.name == 'libdav1d'
           # Clear problematic header search paths for assembly files
