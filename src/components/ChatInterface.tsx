@@ -2,6 +2,17 @@ import React, { useState, useRef, useCallback } from 'react';
 import { View, TextInput, FlatList, TouchableOpacity, Text, ActivityIndicator, KeyboardAvoidingView, Platform } from 'react-native';
 import { logError } from '../utils/logger';
 
+/**
+ * ChatInterface - A reusable chat component with streaming API support
+ *
+ * Features:
+ * - Streaming response handling with proper error recovery
+ * - Response body validation before iteration
+ * - Partial content preservation on stream interruption
+ * - AbortController support for request cancellation
+ * - User-friendly error messages
+ */
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
