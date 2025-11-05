@@ -328,7 +328,11 @@ export default function TetrisScreen() {
       runOnJS(hapticLight)();
     });
 
-  const composedGesture = Gesture.Exclusive(twoFingerTap, pan, flingUp, flingDown);
+  // Allow two-finger tap and pan to work simultaneously, but flings are exclusive with pan
+  const composedGesture = Gesture.Simultaneous(
+    twoFingerTap,
+    Gesture.Exclusive(pan, flingUp, flingDown)
+  );
 
   const gridAnimatedStyle = useAnimatedStyle(() => {
     return {
