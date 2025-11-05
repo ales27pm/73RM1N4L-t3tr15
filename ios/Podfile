@@ -72,6 +72,11 @@ target 'Netsight' do
           config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/Headers/Public/RCTDeprecation'
           config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_CONFIGURATION_BUILD_DIR)/RCTDeprecation/RCTDeprecation.framework/Headers'
 
+          # Fix Yoga header paths for React Native 0.79+
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/yoga'
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_ROOT)/Headers/Public/yoga'
+          config.build_settings['HEADER_SEARCH_PATHS'] << '$(PODS_CONFIGURATION_BUILD_DIR)/yoga/yoga.framework/Headers'
+
           # Fix module map search paths
           config.build_settings['SWIFT_INCLUDE_PATHS'] ||= ['$(inherited)']
           config.build_settings['SWIFT_INCLUDE_PATHS'] << '$(PODS_ROOT)/Headers/Public'
