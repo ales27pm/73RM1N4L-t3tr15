@@ -345,3 +345,10 @@ Built with ❤️ using React Native and Expo.
   - User-friendly error messages in chat UI
   - TypeScript types for type safety
 
+### Recent Fixes
+- **Notification Service**: Fixed NativeEventEmitter initialization error
+  - Moved `Notifications.setNotificationHandler()` call from module-level to app mount
+  - Created `initializeNotificationHandler()` function called in App.tsx useEffect
+  - Prevents "requires a non-null argument" error on app startup
+  - Ensures proper initialization timing after native modules are ready
+

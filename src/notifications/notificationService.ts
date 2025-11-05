@@ -2,16 +2,28 @@ import * as Notifications from "expo-notifications";
 import { Platform } from "react-native";
 import { logDebug, logInfo } from "../utils/logger";
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldShowBanner: true,
-    shouldShowList: false,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-    priority: Notifications.AndroidNotificationPriority.DEFAULT,
-  }),
-});
+let notificationHandlerConfigured = false;
+
+/**
+ * Initialize notification handler. This must be called after the app is mounted
+ * to avoid NativeEventEmitter initialization errors.
+ */
+export const initializeNotificationHandler = () => {
+  if (notificationHandlerConfigured) return;
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldShowBanner: true,
+      shouldShowList: false,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+      priority: Notifications.AndroidNotificationPriority.DEFAULT,
+    }),
+  });
+
+  notificationHandlerConfigured = true;
+};
 
 export type NotificationSchedule = {
   hour: number;

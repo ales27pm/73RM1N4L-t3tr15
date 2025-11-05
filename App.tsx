@@ -2,7 +2,9 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { NavigationContainer } from "@react-navigation/native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useEffect } from "react";
 import AppNavigator from "./src/navigation/AppNavigator";
+import { initializeNotificationHandler } from "./src/notifications/notificationService";
 
 /*
 IMPORTANT NOTICE: DO NOT REMOVE
@@ -26,6 +28,11 @@ const openai_api_key = Constants.expoConfig.extra.apikey;
 */
 
 export default function App() {
+  useEffect(() => {
+    // Initialize notification handler after app is mounted
+    initializeNotificationHandler();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
