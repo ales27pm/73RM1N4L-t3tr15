@@ -32,12 +32,11 @@ function RainStream({ x, len, speed, delay }: Stream) {
   useEffect(() => {
     y.value = -SCREEN_H;
     const run = () => {
-      y.value = withTiming(SCREEN_H + len * 16, { duration: speed, easing: Easing.linear }, (finished) => {
-        if (finished) {
-          y.value = -SCREEN_H;
-          run();
-        }
-      });
+      y.value = withRepeat(
+        withTiming(SCREEN_H + len * 16, { duration: speed, easing: Easing.linear }),
+        -1,
+        false
+      );
     };
     const t = setTimeout(run, delay);
     return () => { clearTimeout(t); };

@@ -32,6 +32,44 @@ const TERMINAL_GREEN = "#00FF00";
 const TERMINAL_DARK_GREEN = "#00AA00";
 const TERMINAL_BG = "#000";
 
+// ClearedRowFlash component
+function ClearedRowFlash({
+  row,
+  cellSize,
+  playWidth,
+  glitchSV,
+  glitchFxEnabled,
+  lineFlashStyle
+}: {
+  row: number;
+  cellSize: number;
+  playWidth: number;
+  glitchSV: Animated.SharedValue<number>;
+  glitchFxEnabled: boolean;
+  lineFlashStyle: any;
+}) {
+  const rowGlitchStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: glitchFxEnabled ? (glitchSV.value * (((row * 13) % 5) - 2)) : 0 }],
+  }));
+
+  return (
+    <Animated.View
+      style={[
+        {
+          position: "absolute",
+          left: 0,
+          top: row * cellSize,
+          width: playWidth,
+          height: cellSize,
+          backgroundColor: TERMINAL_GREEN
+        },
+        lineFlashStyle,
+        rowGlitchStyle
+      ]}
+    />
+  );
+}
+
 export default function TetrisScreen() {
   const insets = useSafeAreaInsets();
   const [demoErrorVisible, setDemoErrorVisible] = useState(false);
@@ -261,10 +299,6 @@ export default function TetrisScreen() {
     transform: [{ translateY: scanY.value }], opacity: 0.25,
   }));
 
-  const glitchRowStyle = (row: number) => useAnimatedStyle(() => ({
-    transform: [{ translateX: glitchSV.value * (((row * 13) % 5) - 2) }],
-  }));
-
   const renderAsciiGhost = () => {
     if (!currentPiece) return null;
     const gy = ghostDropY(grid, currentPiece);
@@ -482,7 +516,7 @@ export default function TetrisScreen() {
                 </>
               )}
               {lastClearedRows?.map((r: number) => (
-                <Animated.View key={`clr-${r}`} style={[{ position: "absolute", left: 0, top: r * CELL, width: PLAY_WIDTH, height: CELL, backgroundColor: TERMINAL_GREEN }, lineFlashStyle, glitchFxEnabled ? glitchRowStyle(r) : null]} />
+                <ClearedRowFlash key={`clr-${r}`} row={r} cellSize={CELL} playWidth={PLAY_WIDTH} glitchSV={glitchSV} glitchFxEnabled={glitchFxEnabled} lineFlashStyle={lineFlashStyle} />
               ))}
               <Animated.View pointerEvents="none" style={[{ position: "absolute", left: 0, width: PLAY_WIDTH, height: 18, backgroundColor: TERMINAL_GREEN }, scanlineStyle]} />
               {slashTrailEnabled && (
