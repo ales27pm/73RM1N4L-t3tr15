@@ -788,37 +788,6 @@ export default function TetrisScreen() {
         onSecondaryAction={() => setDemoErrorVisible(false)}
         onDismiss={() => setDemoErrorVisible(false)}
       />
-
-      <View style={styles.controls}>
-        <View style={styles.controlRow}>
-          <Pressable
-            style={({ pressed }) => [styles.moveButton, pressed && { opacity: 0.85 }]}
-            onPress={() => handleMove("left")}
-          >
-            <Text style={styles.buttonText}>←</Text>
-          </Pressable>
-          <Pressable style={({ pressed }) => [styles.moveButton, pressed && { opacity: 0.85 }]} onPress={handleRotate}>
-            <Text style={styles.buttonText}>↻</Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [styles.moveButton, pressed && { opacity: 0.85 }]}
-            onPress={() => handleMove("right")}
-          >
-            <Text style={styles.buttonText}>→</Text>
-          </Pressable>
-        </View>
-        <View style={styles.controlRow}>
-          <Pressable style={({ pressed }) => [styles.dropButton, pressed && { opacity: 0.85 }]} onPress={handleDrop}>
-            <Text style={styles.buttonText}>SOFT DROP</Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [styles.dropButton, pressed && { opacity: 0.85 }]}
-            onPress={handleHardDrop}
-          >
-            <Text style={styles.buttonText}>HARD DROP</Text>
-          </Pressable>
-        </View>
-      </View>
     </View>
   );
 }
