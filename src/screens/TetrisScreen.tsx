@@ -699,46 +699,28 @@ export default function TetrisScreen() {
       {/* Modern Touch Controls */}
       <View style={styles.controlsContainer}>
         <View style={styles.controlsRow}>
-          {/* Left Section: Movement */}
-          <View style={styles.controlsLeft}>
-            <Pressable
-              style={({ pressed }) => [styles.gameControlButton, pressed && styles.gameControlButtonPressed]}
-              onPress={() => handleMove("left")}
-            >
-              <MaterialCommunityIcons name="chevron-left" size={36} color={TERMINAL_GREEN} />
-            </Pressable>
+          {/* Left: Big Rotate Button */}
+          <Pressable
+            style={({ pressed }) => [styles.rotateButton, pressed && styles.rotateButtonPressed]}
+            onPress={handleRotate}
+          >
+            <MaterialCommunityIcons name="rotate-right" size={48} color={TERMINAL_BG} />
+            <Text style={styles.rotateButtonText}>ROTATE</Text>
+          </Pressable>
 
-            <View style={styles.centerControlsColumn}>
-              <Pressable
-                style={({ pressed }) => [styles.gameControlButtonRotate, pressed && styles.gameControlButtonPressed]}
-                onPress={handleRotate}
-              >
-                <MaterialCommunityIcons name="rotate-right" size={32} color={TERMINAL_GREEN} />
-              </Pressable>
-
-              <Pressable
-                style={({ pressed }) => [styles.gameControlButton, pressed && styles.gameControlButtonPressed]}
-                onPress={handleDrop}
-              >
-                <MaterialCommunityIcons name="chevron-down" size={36} color={TERMINAL_GREEN} />
-              </Pressable>
-            </View>
-
-            <Pressable
-              style={({ pressed }) => [styles.gameControlButton, pressed && styles.gameControlButtonPressed]}
-              onPress={() => handleMove("right")}
-            >
-              <MaterialCommunityIcons name="chevron-right" size={36} color={TERMINAL_GREEN} />
-            </Pressable>
+          {/* Center: Swipe Zone Hint */}
+          <View style={styles.swipeZone}>
+            <MaterialCommunityIcons name="gesture-swipe" size={28} color={TERMINAL_GREEN} />
+            <Text style={styles.swipeZoneText}>Swipe on board{"\n"}to move & drop</Text>
           </View>
 
-          {/* Right Section: Actions */}
-          <View style={styles.controlsRight}>
+          {/* Right: Action Buttons */}
+          <View style={styles.actionButtons}>
             <Pressable
               style={({ pressed }) => [
-                styles.gameControlButtonWide,
-                !canHold && styles.gameControlButtonDisabled,
-                pressed && styles.gameControlButtonPressed,
+                styles.actionButton,
+                !canHold && styles.actionButtonDisabled,
+                pressed && styles.actionButtonPressed,
               ]}
               onPress={() => {
                 if (canHold) {
@@ -749,16 +731,16 @@ export default function TetrisScreen() {
               }}
               disabled={!canHold}
             >
-              <MaterialCommunityIcons name="swap-horizontal" size={24} color={canHold ? TERMINAL_GREEN : "#005500"} />
-              <Text style={[styles.gameControlButtonText, !canHold && styles.gameControlButtonTextDisabled]}>HOLD</Text>
+              <MaterialCommunityIcons name="swap-horizontal" size={28} color={canHold ? TERMINAL_GREEN : "#003300"} />
+              <Text style={[styles.actionButtonText, !canHold && styles.actionButtonTextDisabled]}>HOLD</Text>
             </Pressable>
 
             <Pressable
-              style={({ pressed }) => [styles.gameControlButtonWide, styles.gameControlButtonHighlight, pressed && styles.gameControlButtonPressed]}
+              style={({ pressed }) => [styles.dropButton, pressed && styles.dropButtonPressed]}
               onPress={handleHardDrop}
             >
-              <MaterialCommunityIcons name="chevron-double-down" size={24} color={TERMINAL_BG} />
-              <Text style={[styles.gameControlButtonText, styles.gameControlButtonTextHighlight]}>DROP</Text>
+              <MaterialCommunityIcons name="arrow-collapse-down" size={32} color={TERMINAL_BG} />
+              <Text style={styles.dropButtonText}>DROP</Text>
             </Pressable>
           </View>
         </View>
@@ -766,7 +748,7 @@ export default function TetrisScreen() {
 
       {showHints && (
         <View style={styles.hintsOverlay}>
-          <Text style={styles.hintText}>Use buttons below to play • Swipe on board for quick moves</Text>
+          <Text style={styles.hintText}>Swipe board to move pieces • Tap ROTATE button to spin</Text>
           <Pressable onPress={hideHints} style={styles.hintDismiss}>
             <Text style={styles.hintDismissText}>×</Text>
           </Pressable>
@@ -954,14 +936,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: TERMINAL_GREEN,
   },
-  dropButton: {
-    backgroundColor: TERMINAL_DARK_GREEN,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    borderRadius: 10,
-    borderWidth: 2,
-    borderColor: TERMINAL_GREEN,
-  },
   buttonText: { color: TERMINAL_GREEN, fontSize: 16, fontWeight: "bold" },
   gameOverOverlay: {
     position: "absolute",
@@ -1075,33 +1049,139 @@ const styles = StyleSheet.create({
   },
   settingText: { color: TERMINAL_GREEN, fontSize: 14 },
 
-  // Modern Game Controls
+  // Modern Game Controls - Redesigned
   controlsContainer: {
     width: "100%",
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    paddingBottom: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    paddingBottom: 12,
+    backgroundColor: "rgba(0, 20, 0, 0.3)",
+    borderTopWidth: 1,
+    borderTopColor: TERMINAL_DARK_GREEN,
   },
   controlsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    gap: 20,
+    gap: 16,
   },
-  controlsLeft: {
-    flexDirection: "row",
+
+  // Big Rotate Button (Left)
+  rotateButton: {
+    width: 110,
+    height: 110,
+    borderRadius: 55,
+    backgroundColor: TERMINAL_GREEN,
+    justifyContent: "center",
     alignItems: "center",
-    gap: 12,
+    shadowColor: TERMINAL_GREEN,
+    shadowOpacity: 0.6,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
+  },
+  rotateButtonPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.92 }],
+    shadowOpacity: 0.4,
+  },
+  rotateButtonText: {
+    color: TERMINAL_BG,
+    fontSize: 13,
+    fontWeight: "900",
+    letterSpacing: 1.5,
+    marginTop: 4,
+  },
+
+  // Center Swipe Hint
+  swipeZone: {
     flex: 1,
-  },
-  centerControlsColumn: {
-    gap: 8,
     alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 12,
+    opacity: 0.6,
   },
-  controlsRight: {
-    gap: 12,
+  swipeZoneText: {
+    color: TERMINAL_GREEN,
+    fontSize: 11,
+    textAlign: "center",
+    marginTop: 6,
+    lineHeight: 15,
+    fontWeight: "600",
+  },
+
+  // Right Action Buttons
+  actionButtons: {
+    gap: 10,
     alignItems: "flex-end",
   },
+  actionButton: {
+    minWidth: 90,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: "rgba(0, 50, 0, 0.4)",
+    borderWidth: 2,
+    borderColor: TERMINAL_GREEN,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+    paddingHorizontal: 14,
+    shadowColor: TERMINAL_GREEN,
+    shadowOpacity: 0.25,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+  },
+  actionButtonDisabled: {
+    opacity: 0.3,
+    borderColor: "#003300",
+    backgroundColor: "rgba(0, 20, 0, 0.2)",
+  },
+  actionButtonPressed: {
+    opacity: 0.6,
+    transform: [{ scale: 0.95 }],
+  },
+  actionButtonText: {
+    color: TERMINAL_GREEN,
+    fontSize: 13,
+    fontWeight: "800",
+    letterSpacing: 1,
+  },
+  actionButtonTextDisabled: {
+    color: "#003300",
+  },
+
+  // Drop Button (Highlighted)
+  dropButton: {
+    minWidth: 90,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: TERMINAL_GREEN,
+    borderWidth: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 6,
+    paddingHorizontal: 14,
+    shadowColor: TERMINAL_GREEN,
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 6,
+  },
+  dropButtonPressed: {
+    opacity: 0.7,
+    transform: [{ scale: 0.95 }],
+    shadowOpacity: 0.4,
+  },
+  dropButtonText: {
+    color: TERMINAL_BG,
+    fontSize: 13,
+    fontWeight: "900",
+    letterSpacing: 1.5,
+  },
+
+  // Old control styles (kept for backward compatibility)
   gameControlButton: {
     width: 64,
     height: 64,
