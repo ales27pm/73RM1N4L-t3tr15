@@ -18,3 +18,7 @@ iOS Bundled 43ms index.ts (1 module)
  INFO  [RN:INFO:main-loop] Session ended (background) after 120s
  INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:28:55.163Z"}
  INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 16, "endedAt": "2025-11-05T05:29:11.176Z", "rewardsUnlocked": 0, "sessionCount": 24, "streak": 24}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 16s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:30:11.427Z"}
+ INFO  [RN:INFO:main-loop] Session started
