@@ -19,7 +19,7 @@ export default function MatrixRain({ density = 14, opacity = 0.25 }: { density?:
   }, [density]);
 
   return (
-    <View pointerEvents="none" style={[StyleSheet.absoluteFill, { opacity }]}> 
+    <View pointerEvents="none" style={[StyleSheet.absoluteFill, { opacity }]}>
       {streams.map((s, idx) => (
         <RainStream key={idx} {...s} />
       ))}
@@ -39,7 +39,9 @@ function RainStream({ x, len, speed, delay }: Stream) {
       );
     };
     const t = setTimeout(run, delay);
-    return () => { clearTimeout(t); };
+    return () => {
+      clearTimeout(t);
+    };
   }, [y, speed, delay, len]);
 
   const style = useAnimatedStyle(() => ({ transform: [{ translateY: y.value }] }));
@@ -49,7 +51,9 @@ function RainStream({ x, len, speed, delay }: Stream) {
   return (
     <Animated.View style={[styles.stream, { left: x }, style]}>
       {glyphs.map((g, i) => (
-        <Text key={i} style={styles.glyph}>{g}</Text>
+        <Text key={i} style={styles.glyph}>
+          {g}
+        </Text>
       ))}
     </Animated.View>
   );
@@ -66,5 +70,13 @@ function randomMatrixString(n: number): string[] {
 
 const styles = StyleSheet.create({
   stream: { position: "absolute", top: -SCREEN_H, flexDirection: "column" },
-  glyph: { color: "#00FF00", fontSize: 12, lineHeight: 14, opacity: 0.9, textShadowColor: "#00FF00", textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 6 },
+  glyph: {
+    color: "#00FF00",
+    fontSize: 12,
+    lineHeight: 14,
+    opacity: 0.9,
+    textShadowColor: "#00FF00",
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 6,
+  },
 });

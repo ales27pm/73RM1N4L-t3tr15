@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+.env*
 
 # Native
 .kotlin/
@@ -34,8 +35,29 @@ yarn-error.*
 *.tsbuildinfo
 
 # iOS & Android
-ios/
-android/
+ios/Pods/
+ios/build/
+ios/*.xcworkspace
+ios/*.xcuserstate
+ios/*/*.xcworkspace
+ios/*/*.xcuserstate
+ios/.xcode.env.local
+ios/.xcode.env.updates
+# Ignore generated branding bitmaps so the repo remains binary-free
+assets/app-icon.png
+assets/splash.png
+ios/*/Images.xcassets/AppIcon.appiconset/*.png
+ios/*/Images.xcassets/SplashScreenLogo.imageset/*.png
+android/.gradle/
+android/.idea/
+android/local.properties
+android/app/build/
+android/build/
+android/app/debug.keystore
+# The Gradle wrapper bootstrap jar stays out of the repository so Git hosting
+# UIs never have to deal with binary merges. The launcher downloads the jar
+# into the Gradle user cache on demand.
+android/gradle/wrapper/gradle-wrapper.jar
 
 # Local secrets for GitHub pushes only
 .specialenv/

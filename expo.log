@@ -1,12 +1,128 @@
 + exec gosu vibecode node node_modules/.bin/expo start --localhost
-env: load .env
-env: export EXPO_PUBLIC_VIBECODE_OPENAI_API_KEY EXPO_PUBLIC_VIBECODE_ANTHROPIC_API_KEY EXPO_PUBLIC_VIBECODE_GROK_API_KEY EXPO_PUBLIC_VIBECODE_GOOGLE_API_KEY EXPO_PUBLIC_VIBECODE_ELEVENLABS_API_KEY
 Starting project at /home/user/workspace
 Starting Metro Bundler
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/Base/Surface/SurfaceHostingView", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/Fabric/Mounting/ComponentViews", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/ar.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/cs.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/da.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/de.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/el.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/en-GB.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/en.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/es-ES.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/es.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/fi.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/fr.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/he.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/hi.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/hr.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/hu.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/id.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/it.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/ja.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/ko.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/ms.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/nb.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/nl.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/pl.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/pt-PT.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/pt.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/ro.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/ru.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/sk.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/sv.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/th.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/tr.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/uk.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/vi.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/zh-Hans.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/zh-Hant-HK.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/zh-Hant.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/React/I18n/strings/zu.lproj", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/Libraries/Components/RefreshControl/__mocks__", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/Libraries/LogBox/UI/LogBoxImages", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/Libraries/Text/TextInput/Multiline", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/Libraries/Text/TextInput/Singleline", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/Libraries/vendor/emitter/__flowtests__", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactAndroid/src/main/java", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactAndroid/src/main/jni", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactAndroid/src/main/res", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactApple/Libraries/RCTFoundation/RCTDeprecation", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/hermes/inspector-modern/chrome", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/jsi/jsi/test", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/jsinspector-modern/tests/engines", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/jsinspector-modern/tests/utils", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/jsinspector-modern/tracing/tests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/jsitooling/react/runtime", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/bridging/tests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/featureflags/tests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/core", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/cputime", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/defaults", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/devtoolsruntimesettings", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/dom", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/featureflags", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/idlecallbacks", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/intersectionobserver", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/microtasks", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/samples", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/nativemodule/webperformance", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/performance/timeline", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/animations", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/attributedstring", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/componentregistry", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/components", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/consistency", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/core", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/css", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/debug", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/dom", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/element", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/graphics", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/imagemanager", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/leakchecker", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/mapbuffer", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/mounting", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/observers", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/runtimescheduler", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/scheduler", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/telemetry", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/textlayoutmanager", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/renderer/uimanager", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/runtime/hermes", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/runtime/iostests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/runtime/nativeviewconfig", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/runtime/platform", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/runtime/tests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/test_utils/ios", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/timing/tests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/react/utils/tests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/reactperflogger/fusebox/tests", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/algorithm", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/config", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/debug", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/enums", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/event", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/node", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/numeric", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/ReactCommon/yoga/yoga/style", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/fusebox/specs", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/featureflags/specs", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/renderer/errorhandling", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/specs_DEPRECATED/components", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/specs_DEPRECATED/modules", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/dom", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/geometry", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/html", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/idlecallbacks", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/intersectionobserver", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/microtasks", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/mutationobserver", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/performance", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/utils", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/websockets", skipping. Add this directory to your ignore list to exclude it.
+Error "ENOENT" reading contents of "/home/user/workspace/node_modules/react-native/src/private/webapis/xhr", skipping. Add this directory to your ignore list to exclude it.
 Waiting on http://localhost:8081
 Logs for your project will appear below.
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 866ms index.ts (1377 modules)
-iOS Bundled 38ms index.ts (1 module)
-iOS Bundled 49ms index.ts (1 module)
- LOG  [index] Project ID is:  ba0e5927-04a2-45a3-b586-e56397b43977
