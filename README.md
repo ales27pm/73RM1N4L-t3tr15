@@ -184,7 +184,19 @@ This script will:
 **Common Issues Fixed:**
 - Duplicate symbol `NativeWorkletsModuleSpecBase` (react-native-reanimated + worklets conflict)
 - Module `RCTDeprecation` in AST file errors
+- Module map file not found errors
 - Header search path resolution issues
+- Linker command failures with exit code 1
+
+**Podfile Fixes Applied:**
+The Podfile includes several post-install fixes for React Native modules:
+- Header search paths for RCTDeprecation and other RCT modules
+- Swift include paths for proper module resolution
+- Module map configuration for bridging headers
+- Precompiled header optimization for React Native targets
+
+**EAS Build Configuration:**
+For EAS cloud builds, a prebuild hook (`scripts/eas-prebuild-ios.sh`) automatically cleans caches before building to prevent module map conflicts.
 
 **Note**: The project uses `react-native-worklets` only for its Babel plugin. Native linking is disabled via `react-native.config.js` to prevent conflicts with `react-native-reanimated` v3's built-in worklets.
 

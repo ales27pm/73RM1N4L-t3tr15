@@ -18,7 +18,8 @@
       "env": {},
       "ios": {
         "distribution": "store",
-        "autoIncrement": true
+        "autoIncrement": true,
+        "prebuildCommand": "bash scripts/eas-prebuild-ios.sh"
       },
       "android": {
         "distribution": "store"
