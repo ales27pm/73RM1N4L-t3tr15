@@ -20,6 +20,7 @@ import Animated, {
   withTiming,
   type AnimatedStyleProp,
 } from "react-native-reanimated";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { resolveDifficultyTier, useTetrisStore } from "../state/tetrisStore";
 import { PIECES, GRID_WIDTH, GRID_HEIGHT } from "../state/tetrominoes";
 import { ghostDropY } from "../state/engine";
@@ -148,10 +149,10 @@ export default function TetrisScreen() {
   const handleRotate = useCallback(() => {
     if (!gameOver && !paused) {
       rotatePiece();
-      if (Platform.OS === "ios") Vibration.vibrate(10);
+      if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(10);
       if (enableSfx) playSfx("rotate");
     }
-  }, [gameOver, paused, rotatePiece, enableSfx]);
+  }, [gameOver, paused, rotatePiece, enableSfx, enableHaptics]);
 
   const handleDrop = useCallback(() => {
     if (!gameOver && !paused) {
@@ -163,10 +164,10 @@ export default function TetrisScreen() {
   const handleHardDrop = useCallback(() => {
     if (!gameOver && !paused) {
       hardDrop();
-      if (Platform.OS === "ios") Vibration.vibrate(50);
+      if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(50);
       if (enableSfx) playSfx("hard");
     }
-  }, [gameOver, paused, hardDrop, enableSfx]);
+  }, [gameOver, paused, hardDrop, enableSfx, enableHaptics]);
 
   // Haptics helpers (called from JS via runOnJS)
   const hapticLight = () => {
@@ -299,14 +300,7 @@ export default function TetrisScreen() {
       runOnJS(stopSlash)();
     });
 
-  const tap = Gesture.Tap()
-    .maxDistance(8)
-    .onEnd(() => {
-      if (pausedSV.value || gameOverSV.value || slashActiveSV.value) return;
-      runOnJS(rotatePiece)();
-      runOnJS(hapticMedium)();
-      runOnJS(playSfx)("rotate");
-    });
+  // Fling gestures for quick actions
   const flingUp = Gesture.Fling()
     .direction(Directions.UP)
     .onEnd(() => {
@@ -322,9 +316,7 @@ export default function TetrisScreen() {
       runOnJS(hapticLight)();
     });
 
-  tap.requireExternalGestureToFail(pan, flingUp, flingDown);
-
-  const composedGesture = Gesture.Exclusive(pan, flingUp, flingDown, tap);
+  const composedGesture = Gesture.Exclusive(pan, flingUp, flingDown);
 
   const gridAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -704,9 +696,77 @@ export default function TetrisScreen() {
         </View>
       </View>
 
+      {/* Modern Touch Controls */}
+      <View style={styles.controlsContainer}>
+        <View style={styles.controlsRow}>
+          {/* Left Section: Movement */}
+          <View style={styles.controlsLeft}>
+            <Pressable
+              style={({ pressed }) => [styles.gameControlButton, pressed && styles.gameControlButtonPressed]}
+              onPress={() => handleMove("left")}
+            >
+              <MaterialCommunityIcons name="chevron-left" size={36} color={TERMINAL_GREEN} />
+            </Pressable>
+
+            <View style={styles.centerControlsColumn}>
+              <Pressable
+                style={({ pressed }) => [styles.gameControlButtonRotate, pressed && styles.gameControlButtonPressed]}
+                onPress={handleRotate}
+              >
+                <MaterialCommunityIcons name="rotate-right" size={32} color={TERMINAL_GREEN} />
+              </Pressable>
+
+              <Pressable
+                style={({ pressed }) => [styles.gameControlButton, pressed && styles.gameControlButtonPressed]}
+                onPress={handleDrop}
+              >
+                <MaterialCommunityIcons name="chevron-down" size={36} color={TERMINAL_GREEN} />
+              </Pressable>
+            </View>
+
+            <Pressable
+              style={({ pressed }) => [styles.gameControlButton, pressed && styles.gameControlButtonPressed]}
+              onPress={() => handleMove("right")}
+            >
+              <MaterialCommunityIcons name="chevron-right" size={36} color={TERMINAL_GREEN} />
+            </Pressable>
+          </View>
+
+          {/* Right Section: Actions */}
+          <View style={styles.controlsRight}>
+            <Pressable
+              style={({ pressed }) => [
+                styles.gameControlButtonWide,
+                !canHold && styles.gameControlButtonDisabled,
+                pressed && styles.gameControlButtonPressed,
+              ]}
+              onPress={() => {
+                if (canHold) {
+                  holdSwap();
+                  if (enableSfx) playSfx("hold");
+                  if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(10);
+                }
+              }}
+              disabled={!canHold}
+            >
+              <MaterialCommunityIcons name="swap-horizontal" size={24} color={canHold ? TERMINAL_GREEN : "#005500"} />
+              <Text style={[styles.gameControlButtonText, !canHold && styles.gameControlButtonTextDisabled]}>HOLD</Text>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [styles.gameControlButtonWide, styles.gameControlButtonHighlight, pressed && styles.gameControlButtonPressed]}
+              onPress={handleHardDrop}
+            >
+              <MaterialCommunityIcons name="chevron-double-down" size={24} color={TERMINAL_BG} />
+              <Text style={[styles.gameControlButtonText, styles.gameControlButtonTextHighlight]}>DROP</Text>
+            </Pressable>
+          </View>
+        </View>
+      </View>
+
       {showHints && (
         <View style={styles.hintsOverlay}>
-          <Text style={styles.hintText}>Tap = Rotate ↑ fling = Hard drop ↓ fling = Soft Pan = Move</Text>
+          <Text style={styles.hintText}>Use buttons below to play • Swipe on board for quick moves</Text>
           <Pressable onPress={hideHints} style={styles.hintDismiss}>
             <Text style={styles.hintDismissText}>×</Text>
           </Pressable>
@@ -1014,4 +1074,101 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   settingText: { color: TERMINAL_GREEN, fontSize: 14 },
+
+  // Modern Game Controls
+  controlsContainer: {
+    width: "100%",
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    paddingBottom: 10,
+  },
+  controlsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 20,
+  },
+  controlsLeft: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    flex: 1,
+  },
+  centerControlsColumn: {
+    gap: 8,
+    alignItems: "center",
+  },
+  controlsRight: {
+    gap: 12,
+    alignItems: "flex-end",
+  },
+  gameControlButton: {
+    width: 64,
+    height: 64,
+    borderRadius: 12,
+    backgroundColor: TERMINAL_BG,
+    borderWidth: 2,
+    borderColor: TERMINAL_GREEN,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: TERMINAL_GREEN,
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  gameControlButtonRotate: {
+    width: 64,
+    height: 56,
+    borderRadius: 12,
+    backgroundColor: TERMINAL_BG,
+    borderWidth: 2,
+    borderColor: TERMINAL_GREEN,
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: TERMINAL_GREEN,
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  gameControlButtonWide: {
+    minWidth: 100,
+    height: 56,
+    borderRadius: 12,
+    backgroundColor: TERMINAL_BG,
+    borderWidth: 2,
+    borderColor: TERMINAL_GREEN,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    gap: 8,
+    paddingHorizontal: 16,
+    shadowColor: TERMINAL_GREEN,
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  gameControlButtonHighlight: {
+    backgroundColor: TERMINAL_GREEN,
+    borderColor: TERMINAL_GREEN,
+  },
+  gameControlButtonPressed: {
+    opacity: 0.6,
+    transform: [{ scale: 0.95 }],
+  },
+  gameControlButtonDisabled: {
+    opacity: 0.3,
+    borderColor: "#005500",
+  },
+  gameControlButtonText: {
+    color: TERMINAL_GREEN,
+    fontSize: 14,
+    fontWeight: "bold",
+    letterSpacing: 1,
+  },
+  gameControlButtonTextHighlight: {
+    color: TERMINAL_BG,
+  },
+  gameControlButtonTextDisabled: {
+    color: "#005500",
+  },
 });
