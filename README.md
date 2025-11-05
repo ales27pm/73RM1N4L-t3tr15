@@ -186,12 +186,14 @@ This script will:
 - Module `RCTDeprecation` in AST file errors
 - Module map file not found errors
 - Header search path resolution issues
+- **'yoga/Yoga.h' file not found** (React Native 0.79+ Yoga layout engine)
 - Linker command failures with exit code 1
 - libdav1d assembly compilation errors with C++ headers
 
 **Podfile Fixes Applied:**
 The Podfile includes several post-install fixes for React Native modules:
 - Header search paths for RCTDeprecation and other RCT modules
+- **Yoga header search paths** for React Native 0.79+ layout engine
 - Swift include paths for proper module resolution
 - Module map configuration for bridging headers
 - Precompiled header optimization for React Native targets
