@@ -11,7 +11,7 @@ import {
   ViewStyle,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Gesture, GestureDetector, Directions } from "react-native-gesture-handler";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, {
   Easing,
   runOnJS,
@@ -20,7 +20,6 @@ import Animated, {
   withTiming,
   type AnimatedStyleProp,
 } from "react-native-reanimated";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { resolveDifficultyTier, useTetrisStore } from "../state/tetrisStore";
 import { PIECES, GRID_WIDTH, GRID_HEIGHT } from "../state/tetrominoes";
 import { ghostDropY } from "../state/engine";
@@ -31,7 +30,7 @@ import { playSfx, setSfxEnabled } from "../utils/sfx";
 import MatrixRain from "../components/MatrixRain";
 import { useMainLoop } from "../mainLoop/useMainLoop";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 // Larger grid - use more screen space
 const BLOCK_SIZE = Math.min(width * 0.07, 28);
 const CELL = PixelRatio.roundToNearestPixel(BLOCK_SIZE);
@@ -77,7 +76,7 @@ export default function TetrisScreen() {
   const rotatePiece = useTetrisStore((s) => s.rotatePiece);
   const gravityStep = useTetrisStore((s) => s.gravityStep);
   const dropPiece = useTetrisStore((s) => s.dropPiece);
-  const hardDrop = useTetrisStore((s) => s.hardDrop);
+  const _hardDrop = useTetrisStore((s) => s.hardDrop); // Reserved for future hard drop gesture
   const holdSwap = useTetrisStore((s) => s.holdSwap);
   const pauseGame = useTetrisStore((s) => s.pauseGame);
   const resetGame = useTetrisStore((s) => s.resetGame);
@@ -136,39 +135,9 @@ export default function TetrisScreen() {
     };
   }, [gravityStep, gameOver, paused]);
 
-  const handleMove = useCallback(
-    (direction: "left" | "right") => {
-      if (!gameOver && !paused) {
-        movePiece(direction);
-        if (Platform.OS === "ios") Vibration.vibrate(10);
-        if (enableSfx) playSfx("move");
-      }
-    },
-    [gameOver, paused, movePiece, enableSfx],
-  );
-
-  const handleRotate = useCallback(() => {
-    if (!gameOver && !paused) {
-      rotatePiece();
-      if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(10);
-      if (enableSfx) playSfx("rotate");
-    }
-  }, [gameOver, paused, rotatePiece, enableSfx, enableHaptics]);
-
-  const handleDrop = useCallback(() => {
-    if (!gameOver && !paused) {
-      dropPiece();
-      if (enableSfx) playSfx("soft");
-    }
-  }, [gameOver, paused, dropPiece, enableSfx]);
-
-  const handleHardDrop = useCallback(() => {
-    if (!gameOver && !paused) {
-      hardDrop();
-      if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(50);
-      if (enableSfx) playSfx("hard");
-    }
-  }, [gameOver, paused, hardDrop, enableSfx, enableHaptics]);
+  // Gesture handlers for touch controls
+  // Note: Currently using tap-based controls on the rendered UI buttons
+  // These callbacks are retained for potential future gesture implementation
 
   // Haptics helpers (called from JS via runOnJS)
   const hapticLight = () => {
@@ -177,9 +146,7 @@ export default function TetrisScreen() {
   const hapticMedium = () => {
     if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(10);
   };
-  const hapticStrong = () => {
-    if (enableHaptics && Platform.OS === "ios") Vibration.vibrate(50);
-  };
+  // Note: hapticStrong reserved for future game events
 
   // Shared flags to avoid worklet reading React state directly
   const pausedSV = useSharedValue(paused ? 1 : 0);
