@@ -1,54 +1,13 @@
 + exec gosu vibecode node node_modules/.bin/expo start --localhost
-env: load .env
-env: export GITHUB_TOKEN
 Starting project at /home/user/workspace
 Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 1131ms index.ts (1807 modules)
-iOS Bundled 61ms index.ts (1 module)
-iOS Bundled 42ms index.ts (1 module)
+iOS Bundled 1105ms index.ts (1831 modules)
+iOS Bundled 56ms index.ts (1 module)
+iOS Bundled 43ms index.ts (1 module)
  INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:49:02.371Z"}
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T06:02:54.128Z"}
  INFO  [RN:INFO:main-loop] Session started
  INFO  [RN:INFO:navigation] Onboarding completed: true
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 7, "endedAt": "2025-11-05T05:49:08.943Z", "rewardsUnlocked": 0, "sessionCount": 41, "streak": 41}
- INFO  [RN:INFO:main-loop] Session ended (background) after 7s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:49:53.223Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 32, "endedAt": "2025-11-05T05:50:24.904Z", "rewardsUnlocked": 0, "sessionCount": 42, "streak": 42}
- INFO  [RN:INFO:main-loop] Session ended (background) after 32s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:51:41.669Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 38, "endedAt": "2025-11-05T05:52:19.332Z", "rewardsUnlocked": 0, "sessionCount": 43, "streak": 43}
- INFO  [RN:INFO:main-loop] Session ended (background) after 38s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:52:22.062Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 51, "endedAt": "2025-11-05T05:53:12.929Z", "rewardsUnlocked": 0, "sessionCount": 44, "streak": 44}
- INFO  [RN:INFO:main-loop] Session ended (background) after 51s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:53:45.240Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 149, "endedAt": "2025-11-05T05:56:13.771Z", "rewardsUnlocked": 0, "sessionCount": 45, "streak": 45}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 149s
-iOS Bundled 59ms index.ts (1 module)
- INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:56:16.227Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:navigation] Onboarding completed: true
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 43, "endedAt": "2025-11-05T05:56:59.353Z", "rewardsUnlocked": 0, "sessionCount": 46, "streak": 46}
- INFO  [RN:INFO:main-loop] Session ended (background) after 43s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:57:02.049Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 28, "endedAt": "2025-11-05T05:57:29.612Z", "rewardsUnlocked": 0, "sessionCount": 47, "streak": 47}
- INFO  [RN:INFO:main-loop] Session ended (background) after 28s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:57:32.365Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 73, "endedAt": "2025-11-05T05:58:44.984Z", "rewardsUnlocked": 0, "sessionCount": 48, "streak": 48}
- INFO  [RN:INFO:main-loop] Session ended (background) after 73s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:59:03.876Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 5, "endedAt": "2025-11-05T05:59:08.668Z", "rewardsUnlocked": 0, "sessionCount": 49, "streak": 49}
- INFO  [RN:INFO:main-loop] Session ended (background) after 5s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:59:18.075Z"}
- INFO  [RN:INFO:main-loop] Session started
