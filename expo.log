@@ -4,45 +4,25 @@ Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 1103ms index.ts (1868 modules)
-iOS Bundled 49ms index.ts (1 module)
+iOS Bundled 1107ms index.ts (1814 modules)
+iOS Bundled 63ms index.ts (1 module)
 iOS Bundled 43ms index.ts (1 module)
  INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:26:54.228Z"}
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:38:56.871Z"}
  INFO  [RN:INFO:main-loop] Session started
  INFO  [RN:INFO:navigation] Onboarding completed: true
- WARN  Ended a touch event which was not counted in `trackedTouchCount`.
- WARN  Ended a touch event which was not counted in `trackedTouchCount`.
- WARN  Ended a touch event which was not counted in `trackedTouchCount`.
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 120, "endedAt": "2025-11-05T05:28:54.613Z", "rewardsUnlocked": 0, "sessionCount": 23, "streak": 23}
- INFO  [RN:INFO:main-loop] Session ended (background) after 120s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:28:55.163Z"}
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 20, "endedAt": "2025-11-05T05:39:16.581Z", "rewardsUnlocked": 0, "sessionCount": 32, "streak": 32}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 20s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:39:16.779Z"}
  INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 16, "endedAt": "2025-11-05T05:29:11.176Z", "rewardsUnlocked": 0, "sessionCount": 24, "streak": 24}
- INFO  [RN:INFO:main-loop] Session ended (background) after 16s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:30:11.427Z"}
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 5, "endedAt": "2025-11-05T05:39:21.300Z", "rewardsUnlocked": 0, "sessionCount": 33, "streak": 33}
+ INFO  [RN:INFO:main-loop] Session ended (manual) after 5s
+iOS Bundled 56ms index.ts (1 module)
+ INFO  [RN:INFO:index] Project ID is undefined
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:39:23.812Z"}
  INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 341, "endedAt": "2025-11-05T05:35:52.447Z", "rewardsUnlocked": 0, "sessionCount": 25, "streak": 25}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 341s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:35:52.448Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 34, "endedAt": "2025-11-05T05:36:26.907Z", "rewardsUnlocked": 0, "sessionCount": 26, "streak": 26}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 34s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:36:26.908Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 25, "endedAt": "2025-11-05T05:36:52.130Z", "rewardsUnlocked": 0, "sessionCount": 27, "streak": 27}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 25s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:36:52.131Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 17, "endedAt": "2025-11-05T05:37:08.850Z", "rewardsUnlocked": 0, "sessionCount": 28, "streak": 28}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 17s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:37:08.853Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 20, "endedAt": "2025-11-05T05:37:28.676Z", "rewardsUnlocked": 0, "sessionCount": 29, "streak": 29}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 20s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:37:28.677Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 12, "endedAt": "2025-11-05T05:37:40.959Z", "rewardsUnlocked": 0, "sessionCount": 30, "streak": 30}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 12s
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:37:40.960Z"}
+ INFO  [RN:INFO:navigation] Onboarding completed: true
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 101, "endedAt": "2025-11-05T05:41:04.432Z", "rewardsUnlocked": 0, "sessionCount": 34, "streak": 34}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 101s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-11-05T05:41:25.643Z"}
  INFO  [RN:INFO:main-loop] Session started
