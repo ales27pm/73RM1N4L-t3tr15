@@ -104,7 +104,17 @@ jobs:
           fi
       - name: Install CocoaPods dependencies
         if: steps.ensure_pods.outputs.present == 'true'
-        run: cd ios && pod install
+        run: |
+          # Clean caches to prevent module/header conflicts
+          rm -rf ~/Library/Developer/Xcode/DerivedData/*
+          rm -rf ~/Library/Developer/Xcode/ModuleCache.noindex
+          rm -rf ios/build
+
+          # Reinstall pods with clean state
+          cd ios
+          pod deintegrate || true
+          pod repo update
+          pod install --repo-update
       - name: Build for simulator
         if: steps.ensure_pods.outputs.present == 'true'
         run: |

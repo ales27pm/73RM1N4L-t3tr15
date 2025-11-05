@@ -161,7 +161,32 @@ bun run test:e2e:android   # E2E tests (Android)
 
 # Asset generation
 bun run assets:generate
+
+# iOS build troubleshooting
+bun run fix:ios:build
 ```
+
+## 🔧 Troubleshooting
+
+### iOS Build Issues
+
+If you encounter duplicate symbol errors or module resolution issues during iOS builds, run:
+
+```bash
+bun run fix:ios:build
+```
+
+This script will:
+- Clean Xcode DerivedData and ModuleCache
+- Remove old build artifacts
+- Reinstall CocoaPods dependencies cleanly
+
+**Common Issues Fixed:**
+- Duplicate symbol `NativeWorkletsModuleSpecBase` (react-native-reanimated + worklets conflict)
+- Module `RCTDeprecation` in AST file errors
+- Header search path resolution issues
+
+**Note**: The project uses `react-native-worklets` only for its Babel plugin. Native linking is disabled via `react-native.config.js` to prevent conflicts with `react-native-reanimated` v3's built-in worklets.
 
 ## 🎯 Game Controls
 
