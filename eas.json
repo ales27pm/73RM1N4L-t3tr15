@@ -14,12 +14,9 @@
       "distribution": "internal"
     },
     "production": {
-      "credentialsSource": "remote",
       "env": {},
       "ios": {
-        "distribution": "store",
-        "autoIncrement": true,
-        "prebuildCommand": "bash scripts/eas-prebuild-ios.sh"
+        "distribution": "store"
       },
       "android": {
         "distribution": "store"
@@ -28,7 +25,9 @@
   },
   "submit": {
     "production": {
-      "ios": {}
+      "ios": {
+        "ascAppId": "6754904970"
+      }
     }
   }
 }
