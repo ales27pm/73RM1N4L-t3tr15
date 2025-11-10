@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": "^16.17.4"
+    "version": "^16.17.4",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
@@ -14,7 +15,10 @@
       "distribution": "internal"
     },
     "production": {
-      "credentialsSource": "remote",
+      "credentialsSource": "local",
+      "hooks": {
+        "pre-build": "npm run android:keystore"
+      },
       "env": {},
       "ios": {
         "distribution": "store",

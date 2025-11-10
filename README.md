@@ -166,6 +166,25 @@ bun run assets:generate
 bun run fix:ios:build
 ```
 
+## 📦 Android Release Builds
+
+Expo builds run in non-interactive mode, so the Android release keystore must exist before Gradle starts.
+The repository keeps credentials in `credentials.json`, but the keystore binary itself is generated on
+the fly to avoid committing secrets.
+
+1. Ensure the following environment variables are set if you need custom credentials. The defaults
+   match `credentials.json` and work for internal builds:
+   - `ANDROID_KEYSTORE_PASSWORD`
+   - `ANDROID_KEY_ALIAS`
+   - `ANDROID_KEY_PASSWORD`
+   - Optional: `ANDROID_KEYSTORE_DNAME`
+2. Run `npm run android:keystore` (or let the EAS `production` profile call it via the `pre-build`
+   hook) to create `android/app/netsight-release-key.jks`.
+3. Trigger `eas build --platform android --profile production` as usual. The generated keystore will
+   be consumed by Gradle via `android/gradle.properties`.
+
+The script is idempotent; rerunning it simply confirms that the keystore already exists.
+
 ## 🔧 Troubleshooting
 
 ### iOS Build Issues
