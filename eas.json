@@ -16,9 +16,6 @@
     },
     "production": {
       "credentialsSource": "local",
-      "hooks": {
-        "pre-build": "npm run android:keystore"
-      },
       "env": {},
       "ios": {
         "distribution": "store",
@@ -29,6 +26,9 @@
         "distribution": "store"
       }
     }
+  },
+  "hooks": {
+    "pre-build": "node scripts/eas-pre-build.mjs"
   },
   "submit": {
     "production": {
