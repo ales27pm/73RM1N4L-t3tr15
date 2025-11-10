@@ -84,6 +84,11 @@ jobs:
             local profile="$2"
             local output_file="build-${platform}.json"
 
+            if [ "${platform}" = "android" ]; then
+              echo "Ensuring Android release keystore is present"
+              node scripts/ensure-android-release-keystore.mjs
+            fi
+
             echo "Starting ${platform} build with profile ${profile}"
             eas build \
               --platform "${platform}" \
