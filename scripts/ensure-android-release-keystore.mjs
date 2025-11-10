@@ -1,10 +1,13 @@
 #!/usr/bin/env node
 import { access, constants, mkdir } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { spawn } from "node:child_process";
 
+const scriptDir = dirname(fileURLToPath(import.meta.url));
+const projectRoot = resolve(scriptDir, "..");
 const RELATIVE_KEYSTORE_PATH = "android/app/netsight-release-key.jks";
-const keystorePath = resolve(RELATIVE_KEYSTORE_PATH);
+const keystorePath = resolve(projectRoot, RELATIVE_KEYSTORE_PATH);
 
 const env = process.env;
 const storePassword = env.ANDROID_KEYSTORE_PASSWORD || "NetsightRelease!23";

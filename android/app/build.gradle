@@ -32,8 +32,9 @@ def ensureAndroidReleaseKeystoreIfNeeded() {
 
     try {
         logger.lifecycle("Ensuring Android release keystore using ${scriptFile.canonicalPath}.")
+        def scriptWorkingDirectory = rootProject.rootDir?.parentFile ?: rootProject.projectDir
         def process = new ProcessBuilder(nodeBinary, scriptFile.canonicalPath)
-                .directory(rootProject.projectDir)
+                .directory(scriptWorkingDirectory)
                 .inheritIO()
                 .start()
         int exitCode = process.waitFor()

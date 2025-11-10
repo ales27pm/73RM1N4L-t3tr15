@@ -1,5 +1,23 @@
 import type { ExpoConfig } from "expo/config";
 
+const plugins: ExpoConfig["plugins"] = [
+  "expo-asset",
+  "expo-build-properties",
+  "expo-font",
+  "expo-mail-composer",
+  "expo-secure-store",
+  "expo-sqlite",
+  "expo-video",
+  "expo-web-browser",
+];
+
+try {
+  require.resolve("expo-router");
+  plugins.unshift("expo-router");
+} catch {
+  // expo-router is optional for this project; ignore when not installed
+}
+
 const appConfig: ExpoConfig = {
   name: "Netsight",
   slug: "netsight",
@@ -31,6 +49,7 @@ const appConfig: ExpoConfig = {
       backgroundColor: "#050b1f",
     },
   },
+  plugins,
   extra: {
     eas: {
       projectId: "0661cabd-28d1-403d-ad26-212dddd78e58",
