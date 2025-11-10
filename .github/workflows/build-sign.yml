@@ -36,6 +36,9 @@ jobs:
     env:
       EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
       EAS_BUILD_AUTOCOMMIT: "0"
+      IOS_DISTRIBUTION_CERT_BASE64: ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }}
+      IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+      IOS_APPLE_TEAM_ID: ${{ secrets.IOS_APPLE_TEAM_ID }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,6 +65,36 @@ jobs:
           fi
 
           echo "::add-mask::$EXPO_TOKEN"
+
+          needs_ios_credentials=false
+          case "${{ github.event.inputs.platform }}" in
+            all|ios)
+              needs_ios_credentials=true
+              ;;
+          esac
+
+          if [ "$needs_ios_credentials" = true ]; then
+            if [ -z "${IOS_DISTRIBUTION_CERT_BASE64:-}" ]; then
+              echo "::error::IOS_DISTRIBUTION_CERT_BASE64 secret is required for iOS builds."
+              exit 1
+            fi
+
+            echo "::add-mask::${IOS_DISTRIBUTION_CERT_BASE64}"
+
+            if [ -z "${IOS_PROVISIONING_PROFILE_BASE64:-}" ]; then
+              echo "::error::IOS_PROVISIONING_PROFILE_BASE64 secret is required for iOS builds."
+              exit 1
+            fi
+
+            echo "::add-mask::${IOS_PROVISIONING_PROFILE_BASE64}"
+
+            if [ -z "${IOS_APPLE_TEAM_ID:-}" ]; then
+              echo "::error::IOS_APPLE_TEAM_ID secret is required for iOS builds."
+              exit 1
+            fi
+
+            echo "::add-mask::${IOS_APPLE_TEAM_ID}"
+          fi
 
           case "${{ github.event.inputs.platform }}" in
             all|android|ios)

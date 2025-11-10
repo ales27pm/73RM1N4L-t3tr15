@@ -322,6 +322,7 @@ artifacts.
 | Secret | Purpose |
 | --- | --- |
 | `EXPO_TOKEN` | Expo access token with permission to run builds and read hosted artifacts. Generate one via `eas token:create`. |
+| `IOS_APPLE_TEAM_ID` | The 10-character Apple Developer Team ID that matches the provisioning profile. Used to stamp `credentials.json` before triggering iOS builds. |
 
 ### Local credential inputs
 
@@ -332,6 +333,9 @@ Store signing assets for the production iOS build in GitHub Actions secrets. The
 | --- | --- |
 | `IOS_DISTRIBUTION_CERT_BASE64` | Base64-encoded `.p12` export of the iOS distribution certificate. Export it **without a password** so EAS can decrypt it via the blank password stored in `credentials.json`. |
 | `IOS_PROVISIONING_PROFILE_BASE64` | Base64-encoded `.mobileprovision` profile that matches the production bundle identifier. |
+| `IOS_APPLE_TEAM_ID` | Mirrors the Required GitHub Secret above so the workflow can update `credentials.json` with the correct Team ID before dispatching the build. |
+
+The helper rewrites `credentials.json` only when the recorded Team ID differs from the supplied secret, keeping the file pristine for local development while ensuring remote builds always include the correct signing metadata.
 
 When the secrets are unavailable the workflow aborts early with an actionable error so we never attempt a build against
 missing signing material.

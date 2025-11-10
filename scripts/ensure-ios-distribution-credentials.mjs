@@ -15,6 +15,9 @@ const provisioningProfilePath = path.join(outputDir, "netsight-production-profil
 const env = process.env;
 const certificateBase64 = env.IOS_DISTRIBUTION_CERT_BASE64 || env.IOS_DIST_CERT_BASE64;
 const provisioningProfileBase64 = env.IOS_PROVISIONING_PROFILE_BASE64 || env.IOS_DIST_PROVISIONING_PROFILE_BASE64;
+const teamIdFromEnv = env.IOS_APPLE_TEAM_ID || env.APPLE_TEAM_ID || "";
+
+const credentialsPath = path.join(projectRoot, "credentials.json");
 
 if (env.IOS_DISTRIBUTION_CERT_PASSWORD || env.IOS_DIST_CERT_PASSWORD) {
   console.warn(
@@ -108,9 +111,52 @@ async function ensureProvisioningProfile() {
   }
 }
 
+async function readCredentials() {
+  try {
+    const raw = await fs.readFile(credentialsPath, "utf8");
+    return JSON.parse(raw);
+  } catch (error) {
+    throw new Error(
+      `Unable to read credentials.json at ${credentialsPath}: ${error instanceof Error ? error.message : String(error)}`,
+    );
+  }
+}
+
+async function writeCredentials(data) {
+  const serialized = `${JSON.stringify(data, null, 2)}\n`;
+  await fs.writeFile(credentialsPath, serialized);
+}
+
+async function ensureTeamId() {
+  const credentials = await readCredentials();
+  const iosCredentials = credentials.ios ?? (credentials.ios = {});
+  const existingTeamId = typeof iosCredentials.teamId === "string" ? iosCredentials.teamId.trim() : "";
+
+  if (!teamIdFromEnv && !existingTeamId) {
+    throw new Error(
+      "Missing IOS_APPLE_TEAM_ID environment variable and ios.teamId is absent from credentials.json. " +
+        "Provide the Apple Developer Team ID via IOS_APPLE_TEAM_ID or add it to credentials.json.",
+    );
+  }
+
+  if (!teamIdFromEnv) {
+    console.info(`Using existing Apple Team ID '${existingTeamId}' from credentials.json.`);
+    return;
+  }
+
+  if (existingTeamId === teamIdFromEnv) {
+    return;
+  }
+
+  iosCredentials.teamId = teamIdFromEnv;
+  await writeCredentials(credentials);
+  console.info(`Updated Apple Team ID in credentials.json to '${teamIdFromEnv}'.`);
+}
+
 async function main() {
   try {
     await Promise.all([ensureCertificate(), ensureProvisioningProfile()]);
+    await ensureTeamId();
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message);
