@@ -19,6 +19,14 @@ const teamIdFromEnv = env.IOS_APPLE_TEAM_ID || env.APPLE_TEAM_ID || "";
 
 const credentialsPath = path.join(projectRoot, "credentials.json");
 
+class MissingCredentialError extends Error {
+  constructor(kind, message) {
+    super(message);
+    this.name = "MissingCredentialError";
+    this.kind = kind;
+  }
+}
+
 if (env.IOS_DISTRIBUTION_CERT_PASSWORD || env.IOS_DIST_CERT_PASSWORD) {
   console.warn(
     "IOS_DISTRIBUTION_CERT_PASSWORD is defined but will be ignored because the certificate must be exported without a password.",
@@ -42,7 +50,7 @@ function decodeBase64(value, label) {
   try {
     return Buffer.from(value, "base64");
   } catch (error) {
-    throw new Error(`Failed to decode ${label}: ${error.message}`);
+    throw new Error(`Failed to decode ${label}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
@@ -65,10 +73,11 @@ async function ensureCertificate() {
   if (!certificateBase64) {
     if (exists) {
       console.info(`iOS distribution certificate already present at ${certificatePath}`);
-      return;
+      return null;
     }
 
-    throw new Error(
+    return new MissingCredentialError(
+      "distribution_certificate",
       `Missing IOS_DISTRIBUTION_CERT_BASE64 environment variable and certificate file is absent. ` +
         `Upload your distribution certificate to ${certificatePath} or expose the base64 string via the environment.`,
     );
@@ -83,6 +92,8 @@ async function ensureCertificate() {
   } else {
     console.info(`iOS distribution certificate at ${certificatePath} is up to date`);
   }
+
+  return null;
 }
 
 async function ensureProvisioningProfile() {
@@ -91,10 +102,11 @@ async function ensureProvisioningProfile() {
   if (!provisioningProfileBase64) {
     if (exists) {
       console.info(`iOS provisioning profile already present at ${provisioningProfilePath}`);
-      return;
+      return null;
     }
 
-    throw new Error(
+    return new MissingCredentialError(
+      "provisioning_profile",
       `Missing IOS_PROVISIONING_PROFILE_BASE64 environment variable and provisioning profile file is absent. ` +
         `Upload your provisioning profile to ${provisioningProfilePath} or expose the base64 string via the environment.`,
     );
@@ -109,6 +121,8 @@ async function ensureProvisioningProfile() {
   } else {
     console.info(`iOS provisioning profile at ${provisioningProfilePath} is up to date`);
   }
+
+  return null;
 }
 
 async function readCredentials() {
@@ -133,7 +147,8 @@ async function ensureTeamId() {
   const existingTeamId = typeof iosCredentials.teamId === "string" ? iosCredentials.teamId.trim() : "";
 
   if (!teamIdFromEnv && !existingTeamId) {
-    throw new Error(
+    return new MissingCredentialError(
+      "team_id",
       "Missing IOS_APPLE_TEAM_ID environment variable and ios.teamId is absent from credentials.json. " +
         "Provide the Apple Developer Team ID via IOS_APPLE_TEAM_ID or add it to credentials.json.",
     );
@@ -141,22 +156,43 @@ async function ensureTeamId() {
 
   if (!teamIdFromEnv) {
     console.info(`Using existing Apple Team ID '${existingTeamId}' from credentials.json.`);
-    return;
+    return null;
   }
 
   if (existingTeamId === teamIdFromEnv) {
-    return;
+    return null;
   }
 
   iosCredentials.teamId = teamIdFromEnv;
   await writeCredentials(credentials);
   console.info(`Updated Apple Team ID in credentials.json to '${teamIdFromEnv}'.`);
+  return null;
 }
 
 async function main() {
   try {
-    await Promise.all([ensureCertificate(), ensureProvisioningProfile()]);
-    await ensureTeamId();
+    const missing = [];
+
+    const [certificateResult, profileResult] = await Promise.all([ensureCertificate(), ensureProvisioningProfile()]);
+    if (certificateResult instanceof MissingCredentialError) {
+      missing.push(certificateResult);
+    }
+    if (profileResult instanceof MissingCredentialError) {
+      missing.push(profileResult);
+    }
+
+    const teamIdResult = await ensureTeamId();
+    if (teamIdResult instanceof MissingCredentialError) {
+      missing.push(teamIdResult);
+    }
+
+    if (missing.length > 0) {
+      for (const error of missing) {
+        console.error(error.message);
+      }
+      process.exitCode = 2;
+      return;
+    }
   } catch (error) {
     if (error instanceof Error) {
       console.error(error.message);

@@ -66,6 +66,9 @@ jobs:
 
           echo "::add-mask::$EXPO_TOKEN"
 
+          ios_certificate_file="ios/certs/netsight-distribution-cert.p12"
+          ios_profile_file="ios/certs/netsight-production-profile.mobileprovision"
+
           needs_ios_credentials=false
           case "${{ github.event.inputs.platform }}" in
             all|ios)
@@ -73,27 +76,32 @@ jobs:
               ;;
           esac
 
-          if [ "$needs_ios_credentials" = true ]; then
-            if [ -z "${IOS_DISTRIBUTION_CERT_BASE64:-}" ]; then
-              echo "::error::IOS_DISTRIBUTION_CERT_BASE64 secret is required for iOS builds."
-              exit 1
-            fi
-
+          if [ -n "${IOS_DISTRIBUTION_CERT_BASE64:-}" ]; then
             echo "::add-mask::${IOS_DISTRIBUTION_CERT_BASE64}"
+          elif [ "$needs_ios_credentials" = true ] && [ ! -f "$ios_certificate_file" ]; then
+            echo "::notice::IOS_DISTRIBUTION_CERT_BASE64 secret is not configured and ${ios_certificate_file} is missing. " \
+              "Provide one of them to enable iOS signing assets during CI builds."
+          fi
 
-            if [ -z "${IOS_PROVISIONING_PROFILE_BASE64:-}" ]; then
-              echo "::error::IOS_PROVISIONING_PROFILE_BASE64 secret is required for iOS builds."
-              exit 1
-            fi
-
+          if [ -n "${IOS_PROVISIONING_PROFILE_BASE64:-}" ]; then
             echo "::add-mask::${IOS_PROVISIONING_PROFILE_BASE64}"
+          elif [ "$needs_ios_credentials" = true ] && [ ! -f "$ios_profile_file" ]; then
+            echo "::notice::IOS_PROVISIONING_PROFILE_BASE64 secret is not configured and ${ios_profile_file} is missing. " \
+              "Provide one of them so the provisioning profile can be prepared automatically."
+          fi
 
-            if [ -z "${IOS_APPLE_TEAM_ID:-}" ]; then
-              echo "::error::IOS_APPLE_TEAM_ID secret is required for iOS builds."
-              exit 1
+          if [ -n "${IOS_APPLE_TEAM_ID:-}" ]; then
+            echo "::add-mask::${IOS_APPLE_TEAM_ID}"
+          elif [ "$needs_ios_credentials" = true ]; then
+            existing_team_id=""
+            if [ -f credentials.json ]; then
+              existing_team_id=$(node -e "try { const fs = require('fs'); const data = JSON.parse(fs.readFileSync('credentials.json', 'utf8')); const value = data?.ios?.teamId; if (typeof value === 'string' && value.trim()) { console.log(value.trim()); } } catch (_) {}");
             fi
 
-            echo "::add-mask::${IOS_APPLE_TEAM_ID}"
+            if [ -z "$existing_team_id" ]; then
+              echo "::notice::IOS_APPLE_TEAM_ID secret is not configured and credentials.json does not contain an iOS team ID. " \
+                "The workflow will skip the iOS build if credentials remain unavailable."
+            fi
           fi
 
           case "${{ github.event.inputs.platform }}" in
@@ -122,7 +130,31 @@ jobs:
               node scripts/ensure-android-release-keystore.mjs
             elif [ "${platform}" = "ios" ]; then
               echo "Ensuring iOS distribution credentials are present"
-              node scripts/ensure-ios-distribution-credentials.mjs
+              if ! credentials_output=$(node scripts/ensure-ios-distribution-credentials.mjs 2>&1); then
+                status=$?
+                if [ -n "$credentials_output" ]; then
+                  printf '%s\n' "$credentials_output"
+                fi
+
+                if [ "$status" -eq 2 ] && [ "${REQUIRE_IOS_CREDENTIALS:-false}" != "true" ]; then
+                  echo "::warning::Skipping iOS build because distribution credentials are unavailable."
+                  SKIPPED_IOS_BUILD=true
+                  SKIPPED_IOS_BUILD_REASON=missing_credentials
+                  if [ -n "${GITHUB_ENV:-}" ]; then
+                    {
+                      echo "SKIPPED_IOS_BUILD=true"
+                      echo "SKIPPED_IOS_BUILD_REASON=missing_credentials"
+                    } >> "$GITHUB_ENV"
+                  fi
+                  return 0
+                fi
+
+                return "$status"
+              fi
+
+              if [ -n "$credentials_output" ]; then
+                printf '%s\n' "$credentials_output"
+              fi
             fi
 
             echo "Starting ${platform} build with profile ${profile}"
@@ -142,7 +174,11 @@ jobs:
           fi
 
           if [ "${INPUT_PLATFORM}" = "all" ] || [ "${INPUT_PLATFORM}" = "ios" ]; then
-            run_build "ios" "${PROFILE}"
+            if [ "${SKIPPED_IOS_BUILD:-false}" = "true" ]; then
+              echo "Skipping queued iOS build because credentials are unavailable."
+            else
+              run_build "ios" "${PROFILE}"
+            fi
           fi
 
       - name: Summarize build artifacts
@@ -160,6 +196,8 @@ jobs:
           const summaryPath = process.env.GITHUB_STEP_SUMMARY;
           const platforms = ['android', 'ios'];
           const rows = [];
+          const skippedIos = process.env.SKIPPED_IOS_BUILD === 'true';
+          const skipReason = process.env.SKIPPED_IOS_BUILD_REASON ?? '';
 
           for (const platform of platforms) {
             const file = `build-${platform}.json`;
@@ -195,12 +233,23 @@ jobs:
 
           if (!rows.length) {
             fs.appendFileSync(summaryPath, 'No build metadata generated.\n');
-            process.exit(0);
+          } else {
+            fs.appendFileSync(summaryPath, '| Platform | Build ID | Status | Artifact |\n');
+            fs.appendFileSync(summaryPath, '| --- | --- | --- | --- |\n');
+            for (const row of rows) {
+              fs.appendFileSync(summaryPath, `| ${row[0]} | ${row[1]} | ${row[2]} | ${row[3]} |\n`);
+            }
+            fs.appendFileSync(summaryPath, '\n');
           }
 
-          fs.appendFileSync(summaryPath, '| Platform | Build ID | Status | Artifact |\n');
-          fs.appendFileSync(summaryPath, '| --- | --- | --- | --- |\n');
-          for (const row of rows) {
-            fs.appendFileSync(summaryPath, `| ${row[0]} | ${row[1]} | ${row[2]} | ${row[3]} |\n`);
+          if (skippedIos) {
+            const reasonText =
+              skipReason === 'missing_credentials'
+                ? 'required signing files were not provided'
+                : skipReason || 'the workflow was instructed to skip iOS builds';
+            fs.appendFileSync(
+              summaryPath,
+              `⚠️ Skipped the iOS build because ${reasonText}. Provide the required credentials to enable signing.\n`,
+            );
           }
           NODE

@@ -337,8 +337,9 @@ Store signing assets for the production iOS build in GitHub Actions secrets. The
 
 The helper rewrites `credentials.json` only when the recorded Team ID differs from the supplied secret, keeping the file pristine for local development while ensuring remote builds always include the correct signing metadata.
 
-When the secrets are unavailable the workflow aborts early with an actionable error so we never attempt a build against
-missing signing material.
+When the secrets are unavailable the workflow emits a warning and skips the iOS build so Android production artifacts can
+still be generated. Provide the signing blobs (or set `REQUIRE_IOS_CREDENTIALS=true` in the workflow environment) to
+force the dispatch to fail when iOS credentials are absent.
 
 ### Workflow Inputs
 
