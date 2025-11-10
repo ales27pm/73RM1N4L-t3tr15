@@ -22,6 +22,7 @@
     "push:github": "bash scripts/github.push.sh",
     "agent:sync": "node scripts/manage-agents.mjs",
     "agent:check": "node scripts/manage-agents.mjs --check",
+    "eas-build-pre-install": "node scripts/eas-pre-build.mjs",
     "fix:ios:build": "bash scripts/fix-ios-build.sh",
     "postinstall": "npm run assets:generate && patch-package"
   },
