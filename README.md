@@ -323,8 +323,18 @@ artifacts.
 | --- | --- |
 | `EXPO_TOKEN` | Expo access token with permission to run builds and read hosted artifacts. Generate one via `eas token:create`. |
 
-EAS manages credentials automatically when you configure them in the Expo dashboard. The workflow simply needs the
-authentication token; the rest of the provisioning stays inside Expo.
+### Local credential inputs
+
+Store signing assets for the production iOS build in GitHub Actions secrets. The workflow decodes these variables into
+`ios/certs/` through `scripts/ensure-ios-distribution-credentials.mjs` before triggering the EAS job:
+
+| Secret | Description |
+| --- | --- |
+| `IOS_DISTRIBUTION_CERT_BASE64` | Base64-encoded `.p12` export of the iOS distribution certificate. Export it **without a password** so EAS can decrypt it via the blank password stored in `credentials.json`. |
+| `IOS_PROVISIONING_PROFILE_BASE64` | Base64-encoded `.mobileprovision` profile that matches the production bundle identifier. |
+
+When the secrets are unavailable the workflow aborts early with an actionable error so we never attempt a build against
+missing signing material.
 
 ### Workflow Inputs
 

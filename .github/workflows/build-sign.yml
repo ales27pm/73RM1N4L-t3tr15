@@ -87,6 +87,9 @@ jobs:
             if [ "${platform}" = "android" ]; then
               echo "Ensuring Android release keystore is present"
               node scripts/ensure-android-release-keystore.mjs
+            elif [ "${platform}" = "ios" ]; then
+              echo "Ensuring iOS distribution credentials are present"
+              node scripts/ensure-ios-distribution-credentials.mjs
             fi
 
             echo "Starting ${platform} build with profile ${profile}"
