@@ -4,6 +4,50 @@ apply plugin: "com.facebook.react"
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
+def shouldEnsureAndroidReleaseKeystore() {
+    def easBuildPlatform = System.getenv("EAS_BUILD_PLATFORM") ?: ""
+    def easBuildProfile = System.getenv("EAS_BUILD_PROFILE") ?: ""
+    if (easBuildPlatform.equalsIgnoreCase("android") && easBuildProfile.equalsIgnoreCase("production")) {
+        return true
+    }
+
+    def requestedTasks = gradle.startParameter?.taskNames ?: []
+    return requestedTasks.any { taskName ->
+        def normalized = taskName?.toLowerCase() ?: ""
+        normalized.contains("release")
+    }
+}
+
+def ensureAndroidReleaseKeystoreIfNeeded() {
+    if (!shouldEnsureAndroidReleaseKeystore()) {
+        return
+    }
+
+    def scriptFile = rootProject.file("../scripts/ensure-android-release-keystore.mjs")
+    if (!scriptFile.exists()) {
+        throw new GradleException("Android release keystore script missing at ${scriptFile.canonicalPath}")
+    }
+
+    def nodeBinary = System.getenv("NODE_BINARY") ?: "node"
+
+    try {
+        logger.lifecycle("Ensuring Android release keystore using ${scriptFile.canonicalPath}.")
+        def process = new ProcessBuilder(nodeBinary, scriptFile.canonicalPath)
+                .directory(rootProject.projectDir)
+                .inheritIO()
+                .start()
+        int exitCode = process.waitFor()
+        if (exitCode != 0) {
+            throw new GradleException("Android release keystore preparation failed with exit code ${exitCode}.")
+        }
+        logger.lifecycle("Android release keystore confirmed for release builds.")
+    } catch (Exception exception) {
+        throw new GradleException("Failed to execute Android release keystore preparation script.", exception)
+    }
+}
+
+ensureAndroidReleaseKeystoreIfNeeded()
+
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.

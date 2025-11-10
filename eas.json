@@ -27,9 +27,6 @@
       }
     }
   },
-  "hooks": {
-    "pre-build": "node scripts/eas-pre-build.mjs"
-  },
   "submit": {
     "production": {
       "ios": {}
