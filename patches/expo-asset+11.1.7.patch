@@ -1,0 +1,39 @@
+diff --git a/node_modules/expo-asset/build/PlatformUtils.js b/node_modules/expo-asset/build/PlatformUtils.js
+index 6ca80e0..0a17afd 100644
+--- a/node_modules/expo-asset/build/PlatformUtils.js
++++ b/node_modules/expo-asset/build/PlatformUtils.js
+@@ -1,7 +1,7 @@
+ import Constants from 'expo-constants';
+ import { requireNativeModule, requireOptionalNativeModule } from 'expo-modules-core';
+ import { getManifestBaseUrl } from './AssetUris';
+-const ExpoUpdates = requireOptionalNativeModule('ExpoUpdates');
++const NetsightExpoModule = requireOptionalNativeModule('NetsightExpoModule');
+ const NativeExpoGoModule = (() => {
+     try {
+         return requireNativeModule('ExpoGo');
+@@ -13,20 +13,14 @@ const NativeExpoGoModule = (() => {
+ function isRunningInExpoGo() {
+     return NativeExpoGoModule != null;
+ }
+-// expo-updates (and Expo Go expo-updates override) manages assets from updates and exposes
+-// the ExpoUpdates.localAssets constant containing information about the assets.
+-const expoUpdatesIsInstalledAndEnabled = !!ExpoUpdates?.isEnabled;
+-const expoUpdatesIsUsingEmbeddedAssets = ExpoUpdates?.isUsingEmbeddedAssets;
+-// if expo-updates is installed but we're running directly from the embedded bundle, we don't want
+-// to override the AssetSourceResolver.
+-const shouldUseUpdatesAssetResolution = expoUpdatesIsInstalledAndEnabled && !expoUpdatesIsUsingEmbeddedAssets;
+ // Expo Go always uses the updates module for asset resolution (local assets) since it
+-// overrides the expo-updates module.
+-export const IS_ENV_WITH_LOCAL_ASSETS = isRunningInExpoGo() || shouldUseUpdatesAssetResolution;
+-// Get the localAssets property from the ExpoUpdates native module so that we do
++// overrides the expo-updates module. Our native Netsight module toggles identical behaviour
++// without forcing expo-updates into the bundle.
++export const IS_ENV_WITH_LOCAL_ASSETS = (NetsightExpoModule && NetsightExpoModule?.enableLocalAssets) || isRunningInExpoGo();
++// Get the localAssets property from the native module so that we do
+ // not need to include expo-updates as a dependency of expo-asset
+ export function getLocalAssets() {
+-    return ExpoUpdates?.localAssets ?? {};
++    return NetsightExpoModule?.localAssets ?? {};
+ }
+ export function getManifest2() {
+     return Constants.__unsafeNoWarnManifest2;

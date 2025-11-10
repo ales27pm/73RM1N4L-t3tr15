@@ -322,9 +322,24 @@ artifacts.
 | Secret | Purpose |
 | --- | --- |
 | `EXPO_TOKEN` | Expo access token with permission to run builds and read hosted artifacts. Generate one via `eas token:create`. |
+| `IOS_APPLE_TEAM_ID` | The 10-character Apple Developer Team ID that matches the provisioning profile. Used to stamp `credentials.json` before triggering iOS builds. |
 
-EAS manages credentials automatically when you configure them in the Expo dashboard. The workflow simply needs the
-authentication token; the rest of the provisioning stays inside Expo.
+### Local credential inputs
+
+Store signing assets for the production iOS build in GitHub Actions secrets. The workflow decodes these variables into
+`ios/certs/` through `scripts/ensure-ios-distribution-credentials.mjs` before triggering the EAS job:
+
+| Secret | Description |
+| --- | --- |
+| `IOS_DISTRIBUTION_CERT_BASE64` | Base64-encoded `.p12` export of the iOS distribution certificate. Export it **without a password** so EAS can decrypt it via the blank password stored in `credentials.json`. |
+| `IOS_PROVISIONING_PROFILE_BASE64` | Base64-encoded `.mobileprovision` profile that matches the production bundle identifier. |
+| `IOS_APPLE_TEAM_ID` | Mirrors the Required GitHub Secret above so the workflow can update `credentials.json` with the correct Team ID before dispatching the build. |
+
+The helper rewrites `credentials.json` only when the recorded Team ID differs from the supplied secret, keeping the file pristine for local development while ensuring remote builds always include the correct signing metadata.
+
+When the secrets are unavailable the workflow emits a warning and skips the iOS build so Android production artifacts can
+still be generated. Provide the signing blobs (or set `REQUIRE_IOS_CREDENTIALS=true` in the workflow environment) to
+force the dispatch to fail when iOS credentials are absent.
 
 ### Workflow Inputs
 

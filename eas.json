@@ -16,9 +16,6 @@
     },
     "production": {
       "credentialsSource": "local",
-      "hooks": {
-        "pre-build": "npm run android:keystore"
-      },
       "env": {},
       "ios": {
         "distribution": "store",
