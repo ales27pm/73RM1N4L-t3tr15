@@ -1,0 +1,165 @@
+# prettier-ignore
+name: Build with EAS
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform to build"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - android
+          - ios
+      profile:
+        description: "EAS build profile"
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - preview
+          - development
+
+env:
+  EXPO_NO_TELEMETRY: "1"
+
+permissions:
+  contents: read
+
+jobs:
+  eas-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EAS_BUILD_AUTOCOMMIT: "0"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install --global eas-cli@16.26.0
+
+      - name: Validate Expo token and inputs
+        run: |
+          set -euo pipefail
+
+          if [ -z "${EXPO_TOKEN:-}" ]; then
+            echo "::error::Configure the EXPO_TOKEN repository secret to authenticate with Expo."
+            exit 1
+          fi
+
+          echo "::add-mask::$EXPO_TOKEN"
+
+          case "${{ github.event.inputs.platform }}" in
+            all|android|ios)
+              ;;
+            *)
+              echo "::error::Unsupported platform input: '${{ github.event.inputs.platform }}'."
+              exit 1
+              ;;
+          esac
+
+      - name: Trigger EAS build(s)
+        env:
+          INPUT_PLATFORM: ${{ github.event.inputs.platform }}
+          INPUT_PROFILE: ${{ github.event.inputs.profile }}
+        run: |
+          set -euo pipefail
+
+          run_build() {
+            local platform="$1"
+            local profile="$2"
+            local output_file="build-${platform}.json"
+
+            echo "Starting ${platform} build with profile ${profile}"
+            eas build \
+              --platform "${platform}" \
+              --profile "${profile}" \
+              --non-interactive \
+              --wait \
+              --json \
+              | tee "${output_file}" > /dev/null
+          }
+
+          PROFILE="${INPUT_PROFILE:-production}"
+
+          if [ "${INPUT_PLATFORM}" = "all" ] || [ "${INPUT_PLATFORM}" = "android" ]; then
+            run_build "android" "${PROFILE}"
+          fi
+
+          if [ "${INPUT_PLATFORM}" = "all" ] || [ "${INPUT_PLATFORM}" = "ios" ]; then
+            run_build "ios" "${PROFILE}"
+          fi
+
+      - name: Summarize build artifacts
+        if: always()
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GITHUB_STEP_SUMMARY:-}" ]; then
+            exit 0
+          fi
+
+          node <<'NODE'
+          const fs = require('fs');
+
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          const platforms = ['android', 'ios'];
+          const rows = [];
+
+          for (const platform of platforms) {
+            const file = `build-${platform}.json`;
+            if (!fs.existsSync(file)) {
+              continue;
+            }
+
+            let job;
+            const raw = fs.readFileSync(file, 'utf8');
+            try {
+              const parsed = JSON.parse(raw);
+              if (Array.isArray(parsed)) {
+                job = parsed[0];
+              } else if (parsed?.jobs && Array.isArray(parsed.jobs)) {
+                job = parsed.jobs[0];
+              } else if (parsed?.builds && Array.isArray(parsed.builds)) {
+                job = parsed.builds[0];
+              } else {
+                job = parsed;
+              }
+            } catch (error) {
+              rows.push([platform, '—', 'parse_error', error.message]);
+              continue;
+            }
+
+            const id = job?.id ?? job?.buildId ?? '—';
+            const status = job?.status ?? job?.buildStatus ?? 'unknown';
+            const artifactUrl = job?.artifacts?.buildUrl ?? job?.artifacts?.url ?? job?.artifacts?.artifactUrl ?? '';
+            const artifactCell = artifactUrl ? `[Download](${artifactUrl})` : '—';
+
+            rows.push([platform, id, status, artifactCell]);
+          }
+
+          if (!rows.length) {
+            fs.appendFileSync(summaryPath, 'No build metadata generated.\n');
+            process.exit(0);
+          }
+
+          fs.appendFileSync(summaryPath, '| Platform | Build ID | Status | Artifact |\n');
+          fs.appendFileSync(summaryPath, '| --- | --- | --- | --- |\n');
+          for (const row of rows) {
+            fs.appendFileSync(summaryPath, `| ${row[0]} | ${row[1]} | ${row[2]} | ${row[3]} |\n`);
+          }
+          NODE

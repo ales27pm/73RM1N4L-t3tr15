@@ -291,6 +291,30 @@ This project uses:
 - **TypeScript Strict Mode**: Type safety
 - **GitHub Actions**: Automated CI/CD
 
+## 🚀 Release Automation
+
+We rely on Expo Application Services (**EAS Build**) to deliver production binaries. The workflow at
+`.github/workflows/build-sign.yml` installs the EAS CLI and triggers remote builds against the profiles defined in `eas.json`.
+Kick off builds from the GitHub **Actions** tab with the `workflow_dispatch` trigger to generate store-ready Android and iOS
+artifacts.
+
+### Required GitHub Secrets
+
+| Secret | Purpose |
+| --- | --- |
+| `EXPO_TOKEN` | Expo access token with permission to run builds and read hosted artifacts. Generate one via `eas token:create`. |
+
+EAS manages credentials automatically when you configure them in the Expo dashboard. The workflow simply needs the
+authentication token; the rest of the provisioning stays inside Expo.
+
+### Workflow Inputs
+
+- **Platform**: Build Android, iOS, or both with a single dispatch.
+- **Profile**: Selects the EAS build profile (`production`, `preview`, or `development`).
+
+Each successful run writes the latest build IDs and hosted download links to the workflow summary. Artifacts remain accessible
+from the Expo dashboard or through the `eas build:list` and `eas build:download` CLI commands.
+
 ## 📝 License
 
 MIT License - See LICENSE file for details
