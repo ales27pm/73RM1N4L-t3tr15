@@ -291,6 +291,37 @@ This project uses:
 - **TypeScript Strict Mode**: Type safety
 - **GitHub Actions**: Automated CI/CD
 
+## 🚀 Release Automation
+
+The repository ships with a dedicated **Build and Sign** workflow at `.github/workflows/build-sign.yml`. Trigger it from the
+**Actions** tab (workflow_dispatch) to produce signed Android and iOS release artifacts on demand.
+
+### Required GitHub Secrets
+
+| Platform | Secret | Purpose |
+| --- | --- | --- |
+| Android | `ANDROID_RELEASE_KEYSTORE_BASE64` | Base64-encoded release keystore (`base64 -w0 android.keystore`). |
+| Android | `ANDROID_RELEASE_KEYSTORE_PASSWORD` | Password used to protect the keystore file. |
+| Android | `ANDROID_RELEASE_KEY_ALIAS` | Alias of the signing key to use. |
+| Android | `ANDROID_RELEASE_KEY_PASSWORD` | Password for the alias/private key. |
+| iOS | `IOS_DISTRIBUTION_CERT_BASE64` | Base64-encoded `.p12` distribution certificate. |
+| iOS | `IOS_DISTRIBUTION_CERT_PASSWORD` | Password that unlocks the `.p12` file. |
+| iOS | `IOS_PROVISIONING_PROFILE_BASE64` | Base64-encoded distribution provisioning profile. |
+| iOS | `IOS_KEYCHAIN_PASSWORD` | Temporary password for the runner keychain that stores the certificate. |
+| iOS | `IOS_TEAM_ID` | Apple Developer Team ID used during codesign. |
+
+> ℹ️ Keep secrets encoded on a single line (e.g., `base64 -b 0` on macOS) to avoid newline parsing issues in CI.
+
+### Workflow Inputs
+
+- **Platform**: Build Android, iOS, or both in a single run.
+- **ios_export_method**: Controls the export method used by `xcodebuild` (`app-store`, `ad-hoc`, `enterprise`, or `development`).
+
+Successful runs upload:
+
+- `android-release` artifact containing the signed `.aab` and `.apk` bundles.
+- `ios-release` artifact containing the signed `.ipa` and zipped dSYM symbols (when available).
+
 ## 📝 License
 
 MIT License - See LICENSE file for details

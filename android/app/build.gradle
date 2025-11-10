@@ -108,15 +108,36 @@ android {
             }
             // Otherwise use the default Android debug keystore
         }
+        release {
+            def keystorePathProp = (findProperty('ANDROID_RELEASE_KEYSTORE_PATH') ?: System.getenv('ANDROID_RELEASE_KEYSTORE_PATH'))
+            def storePasswordProp = (findProperty('ANDROID_RELEASE_KEYSTORE_PASSWORD') ?: System.getenv('ANDROID_RELEASE_KEYSTORE_PASSWORD'))
+            def keyAliasProp = (findProperty('ANDROID_RELEASE_KEY_ALIAS') ?: System.getenv('ANDROID_RELEASE_KEY_ALIAS'))
+            def keyPasswordProp = (findProperty('ANDROID_RELEASE_KEY_PASSWORD') ?: System.getenv('ANDROID_RELEASE_KEY_PASSWORD'))
+
+            if (keystorePathProp && storePasswordProp && keyAliasProp && keyPasswordProp && file(keystorePathProp).exists()) {
+                storeFile file(keystorePathProp)
+                storePassword storePasswordProp
+                keyAlias keyAliasProp
+                keyPassword keyPasswordProp
+                logger.lifecycle("Using configured release keystore at ${keystorePathProp}.")
+            } else {
+                logger.lifecycle('Release keystore configuration not found; falling back to debug signing configuration.')
+                if (signingConfigs.debug?.storeFile != null) {
+                    storeFile signingConfigs.debug.storeFile
+                    storePassword signingConfigs.debug.storePassword
+                    keyAlias signingConfigs.debug.keyAlias
+                    keyPassword signingConfigs.debug.keyPassword
+                }
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // Prefer the release keystore when provided, otherwise default to the debug keystore for non-production contexts.
+            signingConfig signingConfigs.release
             shrinkResources (findProperty('android.enableShrinkResourcesInReleaseBuilds')?.toBoolean() ?: false)
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
