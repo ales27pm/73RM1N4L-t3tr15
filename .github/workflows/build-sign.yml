@@ -1,5 +1,5 @@
 # prettier-ignore
-name: Build and Sign
+name: Build with EAS
 
 on:
   workflow_dispatch:
@@ -13,15 +13,14 @@ on:
           - all
           - android
           - ios
-      ios_export_method:
-        description: "Export method for the signed IPA (app-store, ad-hoc, enterprise, development)"
-        required: false
-        default: app-store
+      profile:
+        description: "EAS build profile"
+        required: true
+        default: production
         type: choice
         options:
-          - app-store
-          - ad-hoc
-          - enterprise
+          - production
+          - preview
           - development
 
 env:
@@ -31,10 +30,12 @@ permissions:
   contents: read
 
 jobs:
-  android:
-    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android'
+  eas-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EAS_BUILD_AUTOCOMMIT: "0"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,276 +46,120 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Setup Java
-        uses: actions/setup-java@v4
-        with:
-          java-version: "17"
-          distribution: "temurin"
-          cache: gradle
-
       - name: Install dependencies
         run: npm ci
 
-      - name: Extract bundle identifiers
-        id: metadata
+      - name: Install EAS CLI
+        run: npm install --global eas-cli@16.26.0
+
+      - name: Validate Expo token and inputs
         run: |
           set -euo pipefail
-          IOS_BUNDLE=$(node -pe "require('./app.json').expo.ios.bundleIdentifier")
-          ANDROID_PACKAGE=$(node -pe "require('./app.json').expo.android.package")
-          {
-            echo "ios_bundle=$IOS_BUNDLE"
-            echo "android_package=$ANDROID_PACKAGE"
-          } >> "$GITHUB_OUTPUT"
 
-      - name: Expo prebuild (Android)
-        run: npx expo prebuild --platform android --non-interactive --no-install
-
-      - name: Ensure Gradle wrapper exists
-        id: ensure_gradlew
-        run: |
-          if [ -f android/gradlew ]; then
-            echo "present=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "present=false" >> "$GITHUB_OUTPUT"
-            echo "::error::Gradle wrapper was not generated; aborting Android release build."
+          if [ -z "${EXPO_TOKEN:-}" ]; then
+            echo "::error::Configure the EXPO_TOKEN repository secret to authenticate with Expo."
             exit 1
           fi
 
-      - name: Download Gradle wrapper jar
-        run: npm run gradle:wrapper:download
+          echo "::add-mask::$EXPO_TOKEN"
 
-      - name: Grant execute permissions for Gradlew
-        run: chmod +x android/gradlew
-
-      - name: Configure Android signing environment
-        env:
-          ANDROID_RELEASE_KEYSTORE_BASE64: ${{ secrets.ANDROID_RELEASE_KEYSTORE_BASE64 }}
-          ANDROID_RELEASE_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEYSTORE_PASSWORD }}
-          ANDROID_RELEASE_KEY_ALIAS: ${{ secrets.ANDROID_RELEASE_KEY_ALIAS }}
-          ANDROID_RELEASE_KEY_PASSWORD: ${{ secrets.ANDROID_RELEASE_KEY_PASSWORD }}
-        run: |
-          set -euo pipefail
-          for var in ANDROID_RELEASE_KEYSTORE_BASE64 ANDROID_RELEASE_KEYSTORE_PASSWORD ANDROID_RELEASE_KEY_ALIAS ANDROID_RELEASE_KEY_PASSWORD; do
-            if [ -z "${!var:-}" ]; then
-              echo "::error::$var is not configured as a repository secret."
+          case "${{ github.event.inputs.platform }}" in
+            all|android|ios)
+              ;;
+            *)
+              echo "::error::Unsupported platform input: '${{ github.event.inputs.platform }}'."
               exit 1
-            fi
-            echo "::add-mask::${!var}"
-          done
+              ;;
+          esac
 
-          echo "$ANDROID_RELEASE_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
-
-          {
-            echo "ANDROID_RELEASE_KEYSTORE_PATH=$PWD/android/app/release.keystore"
-            echo "ANDROID_RELEASE_KEYSTORE_PASSWORD=$ANDROID_RELEASE_KEYSTORE_PASSWORD"
-            echo "ANDROID_RELEASE_KEY_ALIAS=$ANDROID_RELEASE_KEY_ALIAS"
-            echo "ANDROID_RELEASE_KEY_PASSWORD=$ANDROID_RELEASE_KEY_PASSWORD"
-            echo "ANDROID_APPLICATION_ID=${{ steps.metadata.outputs.android_package }}"
-          } >> "$GITHUB_ENV"
-
-      - name: Build signed Android artifacts
-        run: |
-          set -euo pipefail
-          cd android
-          ./gradlew \
-            :app:bundleRelease \
-            :app:assembleRelease
-
-      - name: Collect Android artifacts
-        run: |
-          set -euo pipefail
-          mkdir -p artifacts/android
-          if [ -f android/app/build/outputs/bundle/release/app-release.aab ]; then
-            cp android/app/build/outputs/bundle/release/app-release.aab artifacts/android/Netsight-release.aab
-          fi
-          if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
-            cp android/app/build/outputs/apk/release/app-release.apk artifacts/android/Netsight-release.apk
-          fi
-
-      - name: Upload Android artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-release
-          path: artifacts/android
-
-      - name: Clean up secrets
-        if: always()
-        run: |
-          rm -f android/app/release.keystore
-
-  ios:
-    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'ios'
-    runs-on: macos-latest
-    timeout-minutes: 75
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Extract bundle identifiers
-        id: metadata
-        run: |
-          set -euo pipefail
-          IOS_BUNDLE=$(node -pe "require('./app.json').expo.ios.bundleIdentifier")
-          ANDROID_PACKAGE=$(node -pe "require('./app.json').expo.android.package")
-          {
-            echo "ios_bundle=$IOS_BUNDLE"
-            echo "android_package=$ANDROID_PACKAGE"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: Install Watchman
-        run: brew install watchman
-
-      - name: Expo prebuild (iOS)
-        run: npx expo prebuild --platform ios --non-interactive --no-install
-
-      - name: Install CocoaPods dependencies
-        run: |
-          set -euo pipefail
-          cd ios
-          pod repo update
-          pod install --repo-update
-
-      - name: Configure code signing
+      - name: Trigger EAS build(s)
         env:
-          IOS_DISTRIBUTION_CERT_BASE64: ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }}
-          IOS_DISTRIBUTION_CERT_PASSWORD: ${{ secrets.IOS_DISTRIBUTION_CERT_PASSWORD }}
-          IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
-          IOS_KEYCHAIN_PASSWORD: ${{ secrets.IOS_KEYCHAIN_PASSWORD }}
-          IOS_TEAM_ID: ${{ secrets.IOS_TEAM_ID }}
+          INPUT_PLATFORM: ${{ github.event.inputs.platform }}
+          INPUT_PROFILE: ${{ github.event.inputs.profile }}
         run: |
           set -euo pipefail
-          for var in IOS_DISTRIBUTION_CERT_BASE64 IOS_DISTRIBUTION_CERT_PASSWORD IOS_PROVISIONING_PROFILE_BASE64 IOS_KEYCHAIN_PASSWORD IOS_TEAM_ID; do
-            if [ -z "${!var:-}" ]; then
-              echo "::error::$var is not configured as a repository secret."
-              exit 1
-            fi
-            echo "::add-mask::${!var}"
-          done
 
-          KEYCHAIN_PATH="$RUNNER_TEMP/build-signing.keychain"
-          security create-keychain -p "$IOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
-          security unlock-keychain -p "$IOS_KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
-          security list-keychain -d user -s "$KEYCHAIN_PATH" login.keychain-db
+          run_build() {
+            local platform="$1"
+            local profile="$2"
+            local output_file="build-${platform}.json"
 
-          CERT_PATH="$RUNNER_TEMP/dist-cert.p12"
-          echo "$IOS_DISTRIBUTION_CERT_BASE64" | base64 --decode > "$CERT_PATH"
-          security import "$CERT_PATH" -k "$KEYCHAIN_PATH" -P "$IOS_DISTRIBUTION_CERT_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
-
-          PROFILE_PATH="$RUNNER_TEMP/profile.mobileprovision"
-          echo "$IOS_PROVISIONING_PROFILE_BASE64" | base64 --decode > "$PROFILE_PATH"
-          PROFILE_INFO="$RUNNER_TEMP/profile.plist"
-          security cms -D -i "$PROFILE_PATH" > "$PROFILE_INFO"
-          PROFILE_UUID=$(/usr/libexec/PlistBuddy -c 'Print :UUID' "$PROFILE_INFO")
-          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c 'Print :Name' "$PROFILE_INFO")
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp "$PROFILE_PATH" ~/Library/MobileDevice/Provisioning\ Profiles/"$PROFILE_UUID".mobileprovision
-
-          {
-            echo "KEYCHAIN_PATH=$KEYCHAIN_PATH"
-            echo "PROVISIONING_PROFILE_SPECIFIER=$PROFILE_NAME"
-            echo "PROVISIONING_PROFILE_UUID=$PROFILE_UUID"
-            echo "DEVELOPMENT_TEAM=$IOS_TEAM_ID"
-            echo "IOS_BUNDLE_IDENTIFIER=${{ steps.metadata.outputs.ios_bundle }}"
-          } >> "$GITHUB_ENV"
-
-      - name: Archive iOS app
-        run: |
-          set -euo pipefail
-          cd ios
-          xcodebuild \
-            -workspace Netsight.xcworkspace \
-            -scheme Netsight \
-            -configuration Release \
-            -archivePath $PWD/build/Netsight.xcarchive \
-            -destination 'generic/platform=iOS' \
-            CODE_SIGN_STYLE=Manual \
-            DEVELOPMENT_TEAM="$DEVELOPMENT_TEAM" \
-            PROVISIONING_PROFILE_SPECIFIER="$PROVISIONING_PROFILE_SPECIFIER" \
-            clean archive
-
-      - name: Create export options
-        env:
-          IOS_EXPORT_METHOD: ${{ github.event.inputs.ios_export_method || 'app-store' }}
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import os
-          import plistlib
-
-          export_path = os.path.join('ios', 'build', 'ExportOptions.plist')
-          os.makedirs(os.path.dirname(export_path), exist_ok=True)
-
-          method = os.environ.get('IOS_EXPORT_METHOD', 'app-store')
-          bundle_id = os.environ['IOS_BUNDLE_IDENTIFIER']
-          profile = os.environ['PROVISIONING_PROFILE_SPECIFIER']
-          team = os.environ['DEVELOPMENT_TEAM']
-
-          data = {
-              'method': method,
-              'teamID': team,
-              'signingStyle': 'manual',
-              'stripSwiftSymbols': True,
-              'uploadSymbols': True,
-              'compileBitcode': False,
-              'provisioningProfiles': {bundle_id: profile},
+            echo "Starting ${platform} build with profile ${profile}"
+            eas build \
+              --platform "${platform}" \
+              --profile "${profile}" \
+              --non-interactive \
+              --wait \
+              --json \
+              | tee "${output_file}" > /dev/null
           }
 
-          with open(export_path, 'wb') as handle:
-              plistlib.dump(data, handle)
-          PY
+          PROFILE="${INPUT_PROFILE:-production}"
 
-      - name: Export signed IPA
-        run: |
-          set -euo pipefail
-          cd ios
-          xcodebuild -exportArchive \
-            -archivePath build/Netsight.xcarchive \
-            -exportOptionsPlist build/ExportOptions.plist \
-            -exportPath build/export
-
-      - name: Verify IPA output
-        run: |
-          set -euo pipefail
-          if ! compgen -G "ios/build/export/*.ipa" > /dev/null; then
-            echo "::error::No IPA produced by export step."
-            exit 1
+          if [ "${INPUT_PLATFORM}" = "all" ] || [ "${INPUT_PLATFORM}" = "android" ]; then
+            run_build "android" "${PROFILE}"
           fi
 
-      - name: Package dSYMs
-        run: |
-          set -euo pipefail
-          if compgen -G "ios/build/Netsight.xcarchive/dSYMs/*.dSYM" > /dev/null; then
-            mkdir -p ios/build/export
-            ditto -c -k --sequesterRsrc --keepParent \
-              ios/build/Netsight.xcarchive/dSYMs \
-              ios/build/export/dSYMs.zip
+          if [ "${INPUT_PLATFORM}" = "all" ] || [ "${INPUT_PLATFORM}" = "ios" ]; then
+            run_build "ios" "${PROFILE}"
           fi
 
-      - name: Upload iOS artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ios-release
-          path: |
-            ios/build/export/**/*.ipa
-            ios/build/export/**/*.dSYM.zip
-        if-no-files-found: warn
-
-      - name: Clean up keychain
+      - name: Summarize build artifacts
         if: always()
         run: |
-          KEYCHAIN_PATH="$RUNNER_TEMP/build-signing.keychain"
-          if [ -f "$KEYCHAIN_PATH" ] || [ -f "$KEYCHAIN_PATH-db" ]; then
-            security delete-keychain "$KEYCHAIN_PATH" || true
-          fi
-          rm -f ios/build/ExportOptions.plist
+          set -euo pipefail
 
+          if [ -z "${GITHUB_STEP_SUMMARY:-}" ]; then
+            exit 0
+          fi
+
+          node <<'NODE'
+          const fs = require('fs');
+
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          const platforms = ['android', 'ios'];
+          const rows = [];
+
+          for (const platform of platforms) {
+            const file = `build-${platform}.json`;
+            if (!fs.existsSync(file)) {
+              continue;
+            }
+
+            let job;
+            const raw = fs.readFileSync(file, 'utf8');
+            try {
+              const parsed = JSON.parse(raw);
+              if (Array.isArray(parsed)) {
+                job = parsed[0];
+              } else if (parsed?.jobs && Array.isArray(parsed.jobs)) {
+                job = parsed.jobs[0];
+              } else if (parsed?.builds && Array.isArray(parsed.builds)) {
+                job = parsed.builds[0];
+              } else {
+                job = parsed;
+              }
+            } catch (error) {
+              rows.push([platform, '—', 'parse_error', error.message]);
+              continue;
+            }
+
+            const id = job?.id ?? job?.buildId ?? '—';
+            const status = job?.status ?? job?.buildStatus ?? 'unknown';
+            const artifactUrl = job?.artifacts?.buildUrl ?? job?.artifacts?.url ?? job?.artifacts?.artifactUrl ?? '';
+            const artifactCell = artifactUrl ? `[Download](${artifactUrl})` : '—';
+
+            rows.push([platform, id, status, artifactCell]);
+          }
+
+          if (!rows.length) {
+            fs.appendFileSync(summaryPath, 'No build metadata generated.\n');
+            process.exit(0);
+          }
+
+          fs.appendFileSync(summaryPath, '| Platform | Build ID | Status | Artifact |\n');
+          fs.appendFileSync(summaryPath, '| --- | --- | --- | --- |\n');
+          for (const row of rows) {
+            fs.appendFileSync(summaryPath, `| ${row[0]} | ${row[1]} | ${row[2]} | ${row[3]} |\n`);
+          }
+          NODE

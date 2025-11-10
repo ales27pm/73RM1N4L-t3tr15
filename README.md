@@ -293,34 +293,27 @@ This project uses:
 
 ## 🚀 Release Automation
 
-The repository ships with a dedicated **Build and Sign** workflow at `.github/workflows/build-sign.yml`. Trigger it from the
-GitHub **Actions** tab (workflow_dispatch) to produce signed Android and iOS release artifacts on demand.
+We rely on Expo Application Services (**EAS Build**) to deliver production binaries. The workflow at
+`.github/workflows/build-sign.yml` installs the EAS CLI and triggers remote builds against the profiles defined in `eas.json`.
+Kick off builds from the GitHub **Actions** tab with the `workflow_dispatch` trigger to generate store-ready Android and iOS
+artifacts.
 
 ### Required GitHub Secrets
 
-| Platform | Secret | Purpose |
-| --- | --- | --- |
-| Android | `ANDROID_RELEASE_KEYSTORE_BASE64` | Base64-encoded release keystore (`base64 -w0 android.keystore`). |
-| Android | `ANDROID_RELEASE_KEYSTORE_PASSWORD` | Password used to protect the keystore file. |
-| Android | `ANDROID_RELEASE_KEY_ALIAS` | Alias of the signing key to use. |
-| Android | `ANDROID_RELEASE_KEY_PASSWORD` | Password for the alias/private key. |
-| iOS | `IOS_DISTRIBUTION_CERT_BASE64` | Base64-encoded `.p12` distribution certificate. |
-| iOS | `IOS_DISTRIBUTION_CERT_PASSWORD` | Password that unlocks the `.p12` file. |
-| iOS | `IOS_PROVISIONING_PROFILE_BASE64` | Base64-encoded distribution provisioning profile. |
-| iOS | `IOS_KEYCHAIN_PASSWORD` | Temporary password for the runner keychain that stores the certificate. |
-| iOS | `IOS_TEAM_ID` | Apple Developer Team ID used during codesign. |
+| Secret | Purpose |
+| --- | --- |
+| `EXPO_TOKEN` | Expo access token with permission to run builds and read hosted artifacts. Generate one via `eas token:create`. |
 
-> ℹ️ Keep secrets encoded on a single line (e.g., `base64 -b 0` on macOS) to avoid newline parsing issues in CI.
+EAS manages credentials automatically when you configure them in the Expo dashboard. The workflow simply needs the
+authentication token; the rest of the provisioning stays inside Expo.
 
 ### Workflow Inputs
 
-- **Platform**: Build Android, iOS, or both in a single run.
-- **ios_export_method**: Controls the export method used by `xcodebuild` (`app-store`, `ad-hoc`, `enterprise`, or `development`).
+- **Platform**: Build Android, iOS, or both with a single dispatch.
+- **Profile**: Selects the EAS build profile (`production`, `preview`, or `development`).
 
-Successful runs upload:
-
-- `android-release` artifact containing the signed `.aab` and `.apk` bundles.
-- `ios-release` artifact containing the signed `.ipa` and zipped dSYM symbols (when available).
+Each successful run writes the latest build IDs and hosted download links to the workflow summary. Artifacts remain accessible
+from the Expo dashboard or through the `eas build:list` and `eas build:download` CLI commands.
 
 ## 📝 License
 
