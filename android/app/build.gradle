@@ -109,6 +109,7 @@ android {
             // Otherwise use the default Android debug keystore
         }
         release {
+            initWith signingConfigs.debug
             def keystorePathProp = (findProperty('ANDROID_RELEASE_KEYSTORE_PATH') ?: System.getenv('ANDROID_RELEASE_KEYSTORE_PATH'))
             def storePasswordProp = (findProperty('ANDROID_RELEASE_KEYSTORE_PASSWORD') ?: System.getenv('ANDROID_RELEASE_KEYSTORE_PASSWORD'))
             def keyAliasProp = (findProperty('ANDROID_RELEASE_KEY_ALIAS') ?: System.getenv('ANDROID_RELEASE_KEY_ALIAS'))
@@ -122,12 +123,10 @@ android {
                 logger.lifecycle("Using configured release keystore at ${keystorePathProp}.")
             } else {
                 logger.lifecycle('Release keystore configuration not found; falling back to debug signing configuration.')
-                if (signingConfigs.debug?.storeFile != null) {
-                    storeFile signingConfigs.debug.storeFile
-                    storePassword signingConfigs.debug.storePassword
-                    keyAlias signingConfigs.debug.keyAlias
-                    keyPassword signingConfigs.debug.keyPassword
-                }
+                storeFile signingConfigs.debug?.storeFile
+                storePassword signingConfigs.debug?.storePassword
+                keyAlias signingConfigs.debug?.keyAlias
+                keyPassword signingConfigs.debug?.keyPassword
             }
         }
     }

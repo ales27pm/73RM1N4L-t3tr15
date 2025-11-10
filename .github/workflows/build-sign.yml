@@ -248,30 +248,30 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-import os
-import plistlib
+          import os
+          import plistlib
 
-export_path = os.path.join('ios', 'build', 'ExportOptions.plist')
-os.makedirs(os.path.dirname(export_path), exist_ok=True)
+          export_path = os.path.join('ios', 'build', 'ExportOptions.plist')
+          os.makedirs(os.path.dirname(export_path), exist_ok=True)
 
-method = os.environ.get('IOS_EXPORT_METHOD', 'app-store')
-bundle_id = os.environ['IOS_BUNDLE_IDENTIFIER']
-profile = os.environ['PROVISIONING_PROFILE_SPECIFIER']
-team = os.environ['DEVELOPMENT_TEAM']
+          method = os.environ.get('IOS_EXPORT_METHOD', 'app-store')
+          bundle_id = os.environ['IOS_BUNDLE_IDENTIFIER']
+          profile = os.environ['PROVISIONING_PROFILE_SPECIFIER']
+          team = os.environ['DEVELOPMENT_TEAM']
 
-data = {
-    'method': method,
-    'teamID': team,
-    'signingStyle': 'manual',
-    'stripSwiftSymbols': True,
-    'uploadSymbols': True,
-    'compileBitcode': False,
-    'provisioningProfiles': {bundle_id: profile},
-}
+          data = {
+              'method': method,
+              'teamID': team,
+              'signingStyle': 'manual',
+              'stripSwiftSymbols': True,
+              'uploadSymbols': True,
+              'compileBitcode': False,
+              'provisioningProfiles': {bundle_id: profile},
+          }
 
-with open(export_path, 'wb') as handle:
-    plistlib.dump(data, handle)
-PY
+          with open(export_path, 'wb') as handle:
+              plistlib.dump(data, handle)
+          PY
 
       - name: Export signed IPA
         run: |
@@ -295,10 +295,9 @@ PY
           set -euo pipefail
           if compgen -G "ios/build/Netsight.xcarchive/dSYMs/*.dSYM" > /dev/null; then
             mkdir -p ios/build/export
-            for dsym in ios/build/Netsight.xcarchive/dSYMs/*.dSYM; do
-              BASENAME=$(basename "$dsym" .dSYM)
-              ditto -c -k --sequesterRsrc --keepParent "$dsym" "ios/build/export/${BASENAME}.dSYM.zip"
-            done
+            ditto -c -k --sequesterRsrc --keepParent \
+              ios/build/Netsight.xcarchive/dSYMs \
+              ios/build/export/dSYMs.zip
           fi
 
       - name: Upload iOS artifacts
@@ -306,14 +305,15 @@ PY
         with:
           name: ios-release
           path: |
-            ios/build/export/*.ipa
-            ios/build/export/*.dSYM.zip
+            ios/build/export/**/*.ipa
+            ios/build/export/**/*.dSYM.zip
         if-no-files-found: warn
 
       - name: Clean up keychain
         if: always()
         run: |
-          if [ -n "${KEYCHAIN_PATH:-}" ]; then
+          KEYCHAIN_PATH="$RUNNER_TEMP/build-signing.keychain"
+          if [ -f "$KEYCHAIN_PATH" ] || [ -f "$KEYCHAIN_PATH-db" ]; then
             security delete-keychain "$KEYCHAIN_PATH" || true
           fi
           rm -f ios/build/ExportOptions.plist

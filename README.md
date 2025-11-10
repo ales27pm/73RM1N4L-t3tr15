@@ -294,7 +294,7 @@ This project uses:
 ## 🚀 Release Automation
 
 The repository ships with a dedicated **Build and Sign** workflow at `.github/workflows/build-sign.yml`. Trigger it from the
-**Actions** tab (workflow_dispatch) to produce signed Android and iOS release artifacts on demand.
+GitHub **Actions** tab (workflow_dispatch) to produce signed Android and iOS release artifacts on demand.
 
 ### Required GitHub Secrets
 
