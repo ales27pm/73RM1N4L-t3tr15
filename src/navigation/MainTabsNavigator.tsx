@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import TetrisScreen from "../screens/TetrisScreen";
 import RewardsScreen from "../screens/Rewards/RewardsScreen";
-import NotificationSettingsScreen from "../screens/Notifications/NotificationSettingsScreen";
+import { SettingsNavigator } from "./SettingsNavigator";
 import type { MainTabParamList } from "./types";
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
@@ -36,7 +36,7 @@ export const MainTabsNavigator = () => (
     />
     <Tab.Screen
       name="Settings"
-      component={NotificationSettingsScreen}
+      component={SettingsNavigator}
       options={{ tabBarButtonTestID: "tab-settings", tabBarAccessibilityLabel: "Settings tab" }}
     />
   </Tab.Navigator>

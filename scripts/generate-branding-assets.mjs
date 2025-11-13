@@ -15,12 +15,20 @@ const projectRoot = path.resolve(__dirname, "..");
 const assetsDir = path.join(projectRoot, "assets");
 const brandingSourcesDir = path.join(assetsDir, "branding-sources");
 const iosImagesDir = path.join(projectRoot, "ios", "Netsight", "Images.xcassets", "SplashScreenLogo.imageset");
+const iosAppIconDir = path.join(projectRoot, "ios", "Netsight", "Images.xcassets", "AppIcon.appiconset");
 
 const jobs = [
   {
     description: "Expo marketing icon",
     source: path.join(brandingSourcesDir, "app-icon.svg"),
     outputPath: path.join(assetsDir, "app-icon.png"),
+    fitTo: { mode: "width", value: 1024 },
+    background: "#020617",
+  },
+  {
+    description: "iOS app icon",
+    source: path.join(brandingSourcesDir, "app-icon.svg"),
+    outputPath: path.join(iosAppIconDir, "App-Icon-1024x1024@1x.png"),
     fitTo: { mode: "width", value: 1024 },
     background: "#020617",
   },

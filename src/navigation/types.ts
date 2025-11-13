@@ -18,6 +18,11 @@ export type MainTabParamList = {
   Settings: undefined;
 };
 
+export type SettingsStackParamList = {
+  NotificationSettings: undefined;
+  AppInformation: undefined;
+};
+
 declare global {
   namespace ReactNavigation {
     interface RootParamList extends RootStackParamList {}
@@ -30,3 +35,13 @@ export type AppNavigationProp<RouteName extends keyof RootStackParamList> = Nati
 >;
 
 export type AppRouteProp<RouteName extends keyof RootStackParamList> = RouteProp<RootStackParamList, RouteName>;
+
+export type SettingsStackNavigationProp<RouteName extends keyof SettingsStackParamList> = NativeStackNavigationProp<
+  SettingsStackParamList,
+  RouteName
+>;
+
+export type SettingsStackRouteProp<RouteName extends keyof SettingsStackParamList> = RouteProp<
+  SettingsStackParamList,
+  RouteName
+>;

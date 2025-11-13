@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { View, Text, StyleSheet, Switch, Pressable } from "react-native";
+import { View, Text, StyleSheet, Switch, Pressable, ScrollView } from "react-native";
 import type { BottomTabScreenProps } from "@react-navigation/bottom-tabs";
 import type { MainTabParamList } from "../../navigation/types";
 import { useAppStore } from "../../state/appStore";
 import { scheduleDailyReminder, cancelScheduledReminders } from "../../notifications/notificationService";
 import { logError, logInfo } from "../../utils/logger";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import type { SettingsStackNavigationProp } from "../../navigation/types";
 
 export type NotificationSettingsScreenProps = BottomTabScreenProps<MainTabParamList, "Settings">;
 
@@ -17,6 +20,7 @@ const NotificationSettingsScreen = () => {
   const registerNotificationSchedule = useAppStore((state) => state.registerNotificationSchedule);
   const [isScheduling, setIsScheduling] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const navigation = useNavigation<SettingsStackNavigationProp<"NotificationSettings">>();
 
   const handleToggle = async (value: boolean) => {
     setError(null);
@@ -62,7 +66,7 @@ const NotificationSettingsScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       <Text style={styles.title}>Notifications</Text>
       <View style={styles.row}>
         <View>
@@ -98,7 +102,19 @@ const NotificationSettingsScreen = () => {
           get a gentle ping when it&apos;s time to play.
         </Text>
       </View>
-    </View>
+      <Pressable
+        style={styles.navigationRow}
+        onPress={() => navigation.navigate("AppInformation")}
+        accessibilityRole="button"
+        accessibilityLabel="View App Store metadata"
+        accessibilityHint="Opens localizable information such as bundle identifier and Apple ID"
+        disabled={isScheduling}
+        testID="settings-app-info-row"
+      >
+        <Text style={styles.navigationLabel}>Localizable info</Text>
+        <Ionicons name="chevron-forward" size={18} color="#38bdf8" />
+      </Pressable>
+    </ScrollView>
   );
 };
 
@@ -106,7 +122,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#020617",
+  },
+  content: {
+    flexGrow: 1,
     padding: 24,
+    paddingBottom: 48,
   },
   title: {
     fontSize: 28,
@@ -161,6 +181,21 @@ const styles = StyleSheet.create({
   tipBody: {
     color: "#cbd5f5",
     lineHeight: 20,
+  },
+  navigationRow: {
+    marginTop: 24,
+    backgroundColor: "#0f172a",
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  navigationLabel: {
+    color: "#38bdf8",
+    fontWeight: "600",
+    fontSize: 16,
   },
 });
 
