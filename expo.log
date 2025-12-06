@@ -4,4 +4,12 @@ Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 3186ms index.ts (1874 modules)
+iOS Bundled 2898ms index.ts (1874 modules)
+ INFO  [RN:INFO:index] Project ID is undefined
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T09:05:32.511Z"}
+ INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:navigation] Onboarding completed: true
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 8, "endedAt": "2025-12-06T09:05:40.280Z", "rewardsUnlocked": 0, "sessionCount": 5, "streak": 5}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 8s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T09:06:02.207Z"}
+ INFO  [RN:INFO:main-loop] Session started
