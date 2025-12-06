@@ -107,7 +107,9 @@
     "tailwind-merge": "^3.2.0",
     "tailwindcss": "^3.4.17",
     "uuid": "^11.1.0",
-    "zustand": "^5.0.4"
+    "zustand": "^5.0.4",
+    "react-native-purchases": "^9.6.7",
+    "react-native-purchases-ui": "^9.6.7"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -134,5 +136,6 @@
   "patchedDependencies": {
     "react-native@0.79.2": "patches/react-native@0.79.2.patch",
     "expo-asset@11.1.5": "patches/expo-asset@11.1.5.patch"
-  }
+  },
+  "overrides": {}
 }

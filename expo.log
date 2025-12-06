@@ -4,8 +4,22 @@ Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 3442ms index.ts (1873 modules)
+iOS Bundled 1204ms index.ts (1873 modules)
+iOS Bundled 72ms index.ts (1 module)
  INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T07:52:59.623Z"}
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T07:53:46.966Z"}
  INFO  [RN:INFO:main-loop] Session started
  INFO  [RN:INFO:navigation] Onboarding completed: true
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 11, "endedAt": "2025-12-06T07:53:57.705Z", "rewardsUnlocked": 0, "sessionCount": 142, "streak": 12}
+ INFO  [RN:INFO:main-loop] Session ended (manual) after 11s
+iOS Bundled 63ms index.ts (1 module)
+ INFO  [RN:INFO:index] Project ID is undefined
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T07:53:59.902Z"}
+ INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:navigation] Onboarding completed: true
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 1, "endedAt": "2025-12-06T07:54:01.239Z", "rewardsUnlocked": 0, "sessionCount": 143, "streak": 13}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 1s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T07:54:01.278Z"}
+ INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 11, "endedAt": "2025-12-06T07:54:12.478Z", "rewardsUnlocked": 0, "sessionCount": 144, "streak": 14}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 11s
