@@ -209,7 +209,7 @@ In React Native 0.79+ with New Architecture enabled, Yoga (the layout engine) he
 **EAS Build Configuration:**
 For EAS cloud builds, a prebuild hook (`scripts/eas-prebuild-ios.sh`) automatically cleans caches before building to prevent module map conflicts.
 
-**Note**: The project uses `react-native-worklets` only for its Babel plugin. Native linking is disabled via `react-native.config.js` to prevent conflicts with `react-native-reanimated` v3's built-in worklets.
+**Note**: The project no longer includes `react-native-worklets` as it conflicted with `react-native-reanimated` v3's built-in worklets support. This duplicate dependency caused linker errors with duplicate symbol `NativeWorkletsModuleSpecBase` during iOS builds.
 
 ## 🎯 Game Controls
 
