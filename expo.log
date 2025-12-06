@@ -1,31 +1,7 @@
 + exec gosu vibecode node node_modules/.bin/expo start --localhost
-env: load .env
-env: export EXPO_PUBLIC_VIBECODE_REVENUECAT_TEST_KEY EXPO_PUBLIC_VIBECODE_REVENUECAT_APPLE_KEY
 Starting project at /home/user/workspace
 Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
 iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 1124ms index.ts (1868 modules)
-iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
-iOS Bundled 65ms index.ts (1 module)
- INFO  [RN:INFO:index] Project ID is undefined
- INFO  [RN:INFO:navigation] Onboarding completed: false
- DEBUG  [RN:DEBUG:notifications] Notification permissions already granted
- DEBUG  [RN:DEBUG:notifications] Notification permissions already granted
- DEBUG  [RN:DEBUG:notifications] Cleared scheduled reminders
- INFO  [RN:INFO:notifications] Scheduled reminder 1ddb814c-01dc-4c53-9cf7-d9225d34806d
- INFO  [RN:INFO:notifications] Reminders enabled
- INFO  [RN:INFO:onboarding] Onboarding completed {"completedAt": "2025-12-06T08:21:13.205Z", "rewardsUnlocked": 0}
- INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T08:21:13.336Z"}
- INFO  [RN:INFO:main-loop] Session started
- INFO  [RN:INFO:navigation] Onboarding completed: true
- INFO  [RN:INFO:dev-tools] Onboarding reset
- INFO  [RN:INFO:session] Session completed {"durationSeconds": 3, "endedAt": "2025-12-06T08:21:16.476Z", "rewardsUnlocked": 0, "sessionCount": 1, "streak": 1}
- INFO  [RN:INFO:main-loop] Session ended (manual) after 3s
- INFO  [RN:INFO:navigation] Onboarding completed: false
- DEBUG  [RN:DEBUG:notifications] Notification permissions already granted
- DEBUG  [RN:DEBUG:notifications] Notification permissions already granted
- DEBUG  [RN:DEBUG:notifications] Cleared scheduled reminders
- INFO  [RN:INFO:notifications] Scheduled reminder 2c25de2a-e442-4c9b-8876-c088cd76aebb
- INFO  [RN:INFO:notifications] Reminders enabled
+iOS Bundled 3186ms index.ts (1874 modules)
