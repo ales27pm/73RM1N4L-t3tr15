@@ -112,7 +112,7 @@ export const scheduleDailyReminder = async (schedule: NotificationSchedule) => {
     content: {
       title: "Time to drop blocks!",
       body: "Keep your streak alive by finishing a round today.",
-      sound: Platform.OS === "ios" ? undefined : "default",
+      sound: Platform.OS === "ios" ? false : "default",
       data: { reminderTag: REMINDER_IDENTIFIER },
     },
     trigger: await configureTrigger(schedule),
