@@ -15,6 +15,7 @@ const NotificationSettingsScreen = () => {
   const toggleReminders = useAppStore((state) => state.toggleReminders);
   const setReminderTime = useAppStore((state) => state.setReminderTime);
   const registerNotificationSchedule = useAppStore((state) => state.registerNotificationSchedule);
+  const resetOnboarding = useAppStore((state) => state.resetOnboarding);
   const [isScheduling, setIsScheduling] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -91,6 +92,25 @@ const NotificationSettingsScreen = () => {
         </Pressable>
       </View>
       {error && <Text style={styles.error}>{error}</Text>}
+
+      {/* Developer Tools Section */}
+      <View style={styles.devSection}>
+        <Text style={styles.devTitle}>Developer Tools</Text>
+        <Pressable
+          style={styles.devButton}
+          onPress={() => {
+            resetOnboarding();
+            logInfo("Onboarding reset", { context: "dev-tools" });
+          }}
+          testID="settings-reset-onboarding"
+        >
+          <Text style={styles.devButtonLabel}>Reset Onboarding</Text>
+        </Pressable>
+        <Text style={styles.devNote}>
+          Tap to see the gesture demo and onboarding flow again. The app will restart.
+        </Text>
+      </View>
+
       <View style={styles.tipCard} testID="settings-tip-card">
         <Text style={styles.tipTitle}>Keep your streak alive</Text>
         <Text style={styles.tipBody}>
@@ -161,6 +181,42 @@ const styles = StyleSheet.create({
   tipBody: {
     color: "#cbd5f5",
     lineHeight: 20,
+  },
+  devSection: {
+    marginTop: 32,
+    padding: 16,
+    backgroundColor: "#0f172a",
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#1e293b",
+  },
+  devTitle: {
+    color: "#94a3b8",
+    fontSize: 12,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 1,
+    marginBottom: 12,
+  },
+  devButton: {
+    backgroundColor: "#1e293b",
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: "#334155",
+    marginBottom: 8,
+  },
+  devButtonLabel: {
+    color: "#22d3ee",
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  devNote: {
+    color: "#64748b",
+    fontSize: 12,
+    lineHeight: 16,
+    marginTop: 4,
   },
 });
 

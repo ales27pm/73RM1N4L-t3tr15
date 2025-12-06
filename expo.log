@@ -1,5 +1,31 @@
 + exec gosu vibecode node node_modules/.bin/expo start --localhost
+env: load .env
+env: export EXPO_PUBLIC_VIBECODE_REVENUECAT_TEST_KEY EXPO_PUBLIC_VIBECODE_REVENUECAT_APPLE_KEY
 Starting project at /home/user/workspace
 Starting Metro Bundler
 Waiting on http://localhost:8081
 Logs for your project will appear below.
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 2770ms index.ts (1874 modules)
+iOS Bundled 58ms index.ts (1 module)
+iOS ./index.ts ░░░░░░░░░░░░░░░░  0.0% (0/1)
+iOS Bundled 61ms index.ts (1 module)
+ INFO  [RN:INFO:index] Project ID is undefined
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T08:07:08.789Z"}
+ INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:navigation] Onboarding completed: true
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 7, "endedAt": "2025-12-06T08:07:16.188Z", "rewardsUnlocked": 0, "sessionCount": 148, "streak": 18}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 7s
+iOS Bundled 45ms index.ts (1 module)
+ INFO  [RN:INFO:index] Project ID is undefined
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T08:07:22.723Z"}
+ INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:navigation] Onboarding completed: true
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 2, "endedAt": "2025-12-06T08:07:24.931Z", "rewardsUnlocked": 0, "sessionCount": 149, "streak": 19}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 2s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T08:07:24.973Z"}
+ INFO  [RN:INFO:main-loop] Session started
+ INFO  [RN:INFO:session] Session completed {"durationSeconds": 36, "endedAt": "2025-12-06T08:08:01.227Z", "rewardsUnlocked": 0, "sessionCount": 150, "streak": 20}
+ INFO  [RN:INFO:main-loop] Session ended (background) after 36s
+ INFO  [RN:INFO:session] Session started {"startedAt": "2025-12-06T08:10:03.897Z"}
+ INFO  [RN:INFO:main-loop] Session started
