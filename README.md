@@ -168,6 +168,25 @@ bun run assets:generate
 bun run fix:ios:build
 ```
 
+## 📦 Android Release Builds
+
+Expo builds run in non-interactive mode, so the Android release keystore must exist before Gradle starts.
+The repository keeps credentials in `credentials.json`, but the keystore binary itself is generated on
+the fly to avoid committing secrets.
+
+1. Ensure the following environment variables are set if you need custom credentials. The defaults
+   match `credentials.json` and work for internal builds:
+   - `ANDROID_KEYSTORE_PASSWORD`
+   - `ANDROID_KEY_ALIAS`
+   - `ANDROID_KEY_PASSWORD`
+   - Optional: `ANDROID_KEYSTORE_DNAME`
+2. Run `npm run android:keystore` (or let the EAS `production` profile call it via the `pre-build`
+   hook) to create `android/app/netsight-release-key.jks`.
+3. Trigger `eas build --platform android --profile production` as usual. The generated keystore will
+   be consumed by Gradle via `android/gradle.properties`.
+
+The script is idempotent; rerunning it simply confirms that the keystore already exists.
+
 ## 🔧 Troubleshooting
 
 ### iOS Build Issues
@@ -296,6 +315,45 @@ This project uses:
 - **ESLint**: Code linting
 - **TypeScript Strict Mode**: Type safety
 - **GitHub Actions**: Automated CI/CD
+
+## 🚀 Release Automation
+
+We rely on Expo Application Services (**EAS Build**) to deliver production binaries. The workflow at
+`.github/workflows/build-sign.yml` installs the EAS CLI and triggers remote builds against the profiles defined in `eas.json`.
+Kick off builds from the GitHub **Actions** tab with the `workflow_dispatch` trigger to generate store-ready Android and iOS
+artifacts.
+
+### Required GitHub Secrets
+
+| Secret | Purpose |
+| --- | --- |
+| `EXPO_TOKEN` | Expo access token with permission to run builds and read hosted artifacts. Generate one via `eas token:create`. |
+| `IOS_APPLE_TEAM_ID` | The 10-character Apple Developer Team ID that matches the provisioning profile. Used to stamp `credentials.json` before triggering iOS builds. |
+
+### Local credential inputs
+
+Store signing assets for the production iOS build in GitHub Actions secrets. The workflow decodes these variables into
+`ios/certs/` through `scripts/ensure-ios-distribution-credentials.mjs` before triggering the EAS job:
+
+| Secret | Description |
+| --- | --- |
+| `IOS_DISTRIBUTION_CERT_BASE64` | Base64-encoded `.p12` export of the iOS distribution certificate. Export it **without a password** so EAS can decrypt it via the blank password stored in `credentials.json`. |
+| `IOS_PROVISIONING_PROFILE_BASE64` | Base64-encoded `.mobileprovision` profile that matches the production bundle identifier. |
+| `IOS_APPLE_TEAM_ID` | Mirrors the Required GitHub Secret above so the workflow can update `credentials.json` with the correct Team ID before dispatching the build. |
+
+The helper rewrites `credentials.json` only when the recorded Team ID differs from the supplied secret, keeping the file pristine for local development while ensuring remote builds always include the correct signing metadata.
+
+When the secrets are unavailable the workflow emits a warning and skips the iOS build so Android production artifacts can
+still be generated. Provide the signing blobs (or set `REQUIRE_IOS_CREDENTIALS=true` in the workflow environment) to
+force the dispatch to fail when iOS credentials are absent.
+
+### Workflow Inputs
+
+- **Platform**: Build Android, iOS, or both with a single dispatch.
+- **Profile**: Selects the EAS build profile (`production`, `preview`, or `development`).
+
+Each successful run writes the latest build IDs and hosted download links to the workflow summary. Artifacts remain accessible
+from the Expo dashboard or through the `eas build:list` and `eas build:download` CLI commands.
 
 ## 📝 License
 

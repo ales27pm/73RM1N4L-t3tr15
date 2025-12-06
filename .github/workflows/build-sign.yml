@@ -1,0 +1,255 @@
+# prettier-ignore
+name: Build with EAS
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: "Platform to build"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - android
+          - ios
+      profile:
+        description: "EAS build profile"
+        required: true
+        default: production
+        type: choice
+        options:
+          - production
+          - preview
+          - development
+
+env:
+  EXPO_NO_TELEMETRY: "1"
+
+permissions:
+  contents: read
+
+jobs:
+  eas-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      EAS_BUILD_AUTOCOMMIT: "0"
+      IOS_DISTRIBUTION_CERT_BASE64: ${{ secrets.IOS_DISTRIBUTION_CERT_BASE64 }}
+      IOS_PROVISIONING_PROFILE_BASE64: ${{ secrets.IOS_PROVISIONING_PROFILE_BASE64 }}
+      IOS_APPLE_TEAM_ID: ${{ secrets.IOS_APPLE_TEAM_ID }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install EAS CLI
+        run: npm install --global eas-cli@16.26.0
+
+      - name: Validate Expo token and inputs
+        run: |
+          set -euo pipefail
+
+          if [ -z "${EXPO_TOKEN:-}" ]; then
+            echo "::error::Configure the EXPO_TOKEN repository secret to authenticate with Expo."
+            exit 1
+          fi
+
+          echo "::add-mask::$EXPO_TOKEN"
+
+          ios_certificate_file="ios/certs/netsight-distribution-cert.p12"
+          ios_profile_file="ios/certs/netsight-production-profile.mobileprovision"
+
+          needs_ios_credentials=false
+          case "${{ github.event.inputs.platform }}" in
+            all|ios)
+              needs_ios_credentials=true
+              ;;
+          esac
+
+          if [ -n "${IOS_DISTRIBUTION_CERT_BASE64:-}" ]; then
+            echo "::add-mask::${IOS_DISTRIBUTION_CERT_BASE64}"
+          elif [ "$needs_ios_credentials" = true ] && [ ! -f "$ios_certificate_file" ]; then
+            echo "::notice::IOS_DISTRIBUTION_CERT_BASE64 secret is not configured and ${ios_certificate_file} is missing. " \
+              "Provide one of them to enable iOS signing assets during CI builds."
+          fi
+
+          if [ -n "${IOS_PROVISIONING_PROFILE_BASE64:-}" ]; then
+            echo "::add-mask::${IOS_PROVISIONING_PROFILE_BASE64}"
+          elif [ "$needs_ios_credentials" = true ] && [ ! -f "$ios_profile_file" ]; then
+            echo "::notice::IOS_PROVISIONING_PROFILE_BASE64 secret is not configured and ${ios_profile_file} is missing. " \
+              "Provide one of them so the provisioning profile can be prepared automatically."
+          fi
+
+          if [ -n "${IOS_APPLE_TEAM_ID:-}" ]; then
+            echo "::add-mask::${IOS_APPLE_TEAM_ID}"
+          elif [ "$needs_ios_credentials" = true ]; then
+            existing_team_id=""
+            if [ -f credentials.json ]; then
+              existing_team_id=$(node -e "try { const fs = require('fs'); const data = JSON.parse(fs.readFileSync('credentials.json', 'utf8')); const value = data?.ios?.teamId; if (typeof value === 'string' && value.trim()) { console.log(value.trim()); } } catch (_) {}");
+            fi
+
+            if [ -z "$existing_team_id" ]; then
+              echo "::notice::IOS_APPLE_TEAM_ID secret is not configured and credentials.json does not contain an iOS team ID. " \
+                "The workflow will skip the iOS build if credentials remain unavailable."
+            fi
+          fi
+
+          case "${{ github.event.inputs.platform }}" in
+            all|android|ios)
+              ;;
+            *)
+              echo "::error::Unsupported platform input: '${{ github.event.inputs.platform }}'."
+              exit 1
+              ;;
+          esac
+
+      - name: Trigger EAS build(s)
+        env:
+          INPUT_PLATFORM: ${{ github.event.inputs.platform }}
+          INPUT_PROFILE: ${{ github.event.inputs.profile }}
+        run: |
+          set -euo pipefail
+
+          run_build() {
+            local platform="$1"
+            local profile="$2"
+            local output_file="build-${platform}.json"
+
+            if [ "${platform}" = "android" ]; then
+              echo "Ensuring Android release keystore is present"
+              node scripts/ensure-android-release-keystore.mjs
+            elif [ "${platform}" = "ios" ]; then
+              echo "Ensuring iOS distribution credentials are present"
+              if ! credentials_output=$(node scripts/ensure-ios-distribution-credentials.mjs 2>&1); then
+                status=$?
+                if [ -n "$credentials_output" ]; then
+                  printf '%s\n' "$credentials_output"
+                fi
+
+                if [ "$status" -eq 2 ] && [ "${REQUIRE_IOS_CREDENTIALS:-false}" != "true" ]; then
+                  echo "::warning::Skipping iOS build because distribution credentials are unavailable."
+                  SKIPPED_IOS_BUILD=true
+                  SKIPPED_IOS_BUILD_REASON=missing_credentials
+                  if [ -n "${GITHUB_ENV:-}" ]; then
+                    {
+                      echo "SKIPPED_IOS_BUILD=true"
+                      echo "SKIPPED_IOS_BUILD_REASON=missing_credentials"
+                    } >> "$GITHUB_ENV"
+                  fi
+                  return 0
+                fi
+
+                return "$status"
+              fi
+
+              if [ -n "$credentials_output" ]; then
+                printf '%s\n' "$credentials_output"
+              fi
+            fi
+
+            echo "Starting ${platform} build with profile ${profile}"
+            eas build \
+              --platform "${platform}" \
+              --profile "${profile}" \
+              --non-interactive \
+              --wait \
+              --json \
+              | tee "${output_file}" > /dev/null
+          }
+
+          PROFILE="${INPUT_PROFILE:-production}"
+
+          if [ "${INPUT_PLATFORM}" = "all" ] || [ "${INPUT_PLATFORM}" = "android" ]; then
+            run_build "android" "${PROFILE}"
+          fi
+
+          if [ "${INPUT_PLATFORM}" = "all" ] || [ "${INPUT_PLATFORM}" = "ios" ]; then
+            if [ "${SKIPPED_IOS_BUILD:-false}" = "true" ]; then
+              echo "Skipping queued iOS build because credentials are unavailable."
+            else
+              run_build "ios" "${PROFILE}"
+            fi
+          fi
+
+      - name: Summarize build artifacts
+        if: always()
+        run: |
+          set -euo pipefail
+
+          if [ -z "${GITHUB_STEP_SUMMARY:-}" ]; then
+            exit 0
+          fi
+
+          node <<'NODE'
+          const fs = require('fs');
+
+          const summaryPath = process.env.GITHUB_STEP_SUMMARY;
+          const platforms = ['android', 'ios'];
+          const rows = [];
+          const skippedIos = process.env.SKIPPED_IOS_BUILD === 'true';
+          const skipReason = process.env.SKIPPED_IOS_BUILD_REASON ?? '';
+
+          for (const platform of platforms) {
+            const file = `build-${platform}.json`;
+            if (!fs.existsSync(file)) {
+              continue;
+            }
+
+            let job;
+            const raw = fs.readFileSync(file, 'utf8');
+            try {
+              const parsed = JSON.parse(raw);
+              if (Array.isArray(parsed)) {
+                job = parsed[0];
+              } else if (parsed?.jobs && Array.isArray(parsed.jobs)) {
+                job = parsed.jobs[0];
+              } else if (parsed?.builds && Array.isArray(parsed.builds)) {
+                job = parsed.builds[0];
+              } else {
+                job = parsed;
+              }
+            } catch (error) {
+              rows.push([platform, '—', 'parse_error', error.message]);
+              continue;
+            }
+
+            const id = job?.id ?? job?.buildId ?? '—';
+            const status = job?.status ?? job?.buildStatus ?? 'unknown';
+            const artifactUrl = job?.artifacts?.buildUrl ?? job?.artifacts?.url ?? job?.artifacts?.artifactUrl ?? '';
+            const artifactCell = artifactUrl ? `[Download](${artifactUrl})` : '—';
+
+            rows.push([platform, id, status, artifactCell]);
+          }
+
+          if (!rows.length) {
+            fs.appendFileSync(summaryPath, 'No build metadata generated.\n');
+          } else {
+            fs.appendFileSync(summaryPath, '| Platform | Build ID | Status | Artifact |\n');
+            fs.appendFileSync(summaryPath, '| --- | --- | --- | --- |\n');
+            for (const row of rows) {
+              fs.appendFileSync(summaryPath, `| ${row[0]} | ${row[1]} | ${row[2]} | ${row[3]} |\n`);
+            }
+            fs.appendFileSync(summaryPath, '\n');
+          }
+
+          if (skippedIos) {
+            const reasonText =
+              skipReason === 'missing_credentials'
+                ? 'required signing files were not provided'
+                : skipReason || 'the workflow was instructed to skip iOS builds';
+            fs.appendFileSync(
+              summaryPath,
+              `⚠️ Skipped the iOS build because ${reasonText}. Provide the required credentials to enable signing.\n`,
+            );
+          }
+          NODE

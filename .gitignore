@@ -2,6 +2,7 @@
 
 # dependencies
 node_modules/
+bun.lock
 
 # Expo
 .expo/
@@ -43,6 +44,7 @@ ios/*/*.xcworkspace
 ios/*/*.xcuserstate
 ios/.xcode.env.local
 ios/.xcode.env.updates
+/ios/certs/
 # Ignore generated branding bitmaps so the repo remains binary-free
 assets/app-icon.png
 assets/splash.png

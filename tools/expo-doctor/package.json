@@ -1,0 +1,11 @@
+{
+  "name": "expo-doctor",
+  "version": "1.17.11-patch.1",
+  "private": true,
+  "bin": {
+    "expo-doctor": "bin/expo-doctor.cjs"
+  },
+  "dependencies": {
+    "expo-doctor-upstream": "npm:expo-doctor@1.17.11"
+  }
+}
