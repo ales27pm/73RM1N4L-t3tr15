@@ -28,8 +28,8 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
 
   useEffect(() => {
     // Stagger the animations for a professional sequential demo
-    const duration = 1200;
-    const delayBetween = 400;
+    const duration = 1000;
+    const delayBetween = 350;
 
     // Left swipe animation
     swipeLeftProgress.value = withDelay(
@@ -37,7 +37,7 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
       withRepeat(
         withSequence(
           withTiming(1, { duration, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0, { duration: 300 }),
+          withTiming(0, { duration: 200 }),
         ),
         -1,
         false,
@@ -50,7 +50,7 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
       withRepeat(
         withSequence(
           withTiming(1, { duration, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0, { duration: 300 }),
+          withTiming(0, { duration: 200 }),
         ),
         -1,
         false,
@@ -63,7 +63,7 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
       withRepeat(
         withSequence(
           withTiming(1, { duration, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0, { duration: 300 }),
+          withTiming(0, { duration: 200 }),
         ),
         -1,
         false,
@@ -76,7 +76,7 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
       withRepeat(
         withSequence(
           withTiming(1, { duration, easing: Easing.inOut(Easing.ease) }),
-          withTiming(0, { duration: 300 }),
+          withTiming(0, { duration: 200 }),
         ),
         -1,
         false,
@@ -105,37 +105,35 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
 
   // Animated styles
   const leftSwipeStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: swipeLeftProgress.value * -60 }],
-    opacity: 0.3 + swipeLeftProgress.value * 0.7,
+    transform: [{ translateX: swipeLeftProgress.value * -50 }],
+    opacity: 0.4 + swipeLeftProgress.value * 0.6,
   }));
 
   const rightSwipeStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: swipeRightProgress.value * 60 }],
-    opacity: 0.3 + swipeRightProgress.value * 0.7,
+    transform: [{ translateX: swipeRightProgress.value * 50 }],
+    opacity: 0.4 + swipeRightProgress.value * 0.6,
   }));
 
   const downSwipeStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: swipeDownProgress.value * 60 }],
-    opacity: 0.3 + swipeDownProgress.value * 0.7,
+    transform: [{ translateY: swipeDownProgress.value * 50 }],
+    opacity: 0.4 + swipeDownProgress.value * 0.6,
   }));
 
   const upSwipeStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: swipeUpProgress.value * -60 }],
-    opacity: 0.3 + swipeUpProgress.value * 0.7,
+    transform: [{ translateY: swipeUpProgress.value * -50 }],
+    opacity: 0.4 + swipeUpProgress.value * 0.6,
   }));
 
   const rotateStyle = useAnimatedStyle(() => ({
     transform: [{ rotate: `${rotateProgress.value}deg` }],
-    opacity: 0.3 + (swipeUpProgress.value * 0.7),
+    opacity: 0.4 + swipeUpProgress.value * 0.6,
   }));
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Master the Controls</Text>
-        <Text style={styles.subtitle}>
-          Learn these simple gestures to become a T3TR15 champion
-        </Text>
+        <Text style={styles.subtitle}>Learn these gestures to dominate T3TR15</Text>
       </View>
 
       <View style={styles.demoArea}>
@@ -143,7 +141,7 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
         <View style={styles.gestureCard}>
           <View style={styles.gestureIcon}>
             <Animated.View style={leftSwipeStyle}>
-              <MaterialCommunityIcons name="chevron-left" size={48} color="#00FF00" />
+              <MaterialCommunityIcons name="chevron-left" size={44} color="#00FF00" />
             </Animated.View>
           </View>
           <View style={styles.gestureInfo}>
@@ -156,7 +154,7 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
         <View style={styles.gestureCard}>
           <View style={styles.gestureIcon}>
             <Animated.View style={rightSwipeStyle}>
-              <MaterialCommunityIcons name="chevron-right" size={48} color="#00FF00" />
+              <MaterialCommunityIcons name="chevron-right" size={44} color="#00FF00" />
             </Animated.View>
           </View>
           <View style={styles.gestureInfo}>
@@ -169,7 +167,7 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
         <View style={styles.gestureCard}>
           <View style={styles.gestureIcon}>
             <Animated.View style={downSwipeStyle}>
-              <MaterialCommunityIcons name="chevron-down" size={48} color="#00FF00" />
+              <MaterialCommunityIcons name="chevron-down" size={44} color="#00FF00" />
             </Animated.View>
           </View>
           <View style={styles.gestureInfo}>
@@ -182,10 +180,10 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
         <View style={[styles.gestureCard, styles.highlightedCard]}>
           <View style={styles.gestureIcon}>
             <Animated.View style={upSwipeStyle}>
-              <MaterialCommunityIcons name="chevron-up" size={48} color="#00FF00" />
+              <MaterialCommunityIcons name="chevron-up" size={44} color="#00FF00" />
             </Animated.View>
             <Animated.View style={[styles.rotateIcon, rotateStyle]}>
-              <MaterialCommunityIcons name="rotate-right" size={32} color="#00FF00" />
+              <MaterialCommunityIcons name="rotate-right" size={28} color="#00FF00" />
             </Animated.View>
           </View>
           <View style={styles.gestureInfo}>
@@ -199,7 +197,8 @@ const GestureDemoScreen = ({ navigation }: GestureDemoScreenProps) => {
         <View style={styles.tipCard}>
           <Text style={styles.tipIcon}>💡</Text>
           <Text style={styles.tipText}>
-            <Text style={styles.tipBold}>Pro Tip:</Text> Combine quick swipes for advanced moves!
+            <Text style={styles.tipBold}>Pro Tip: </Text>
+            Combine quick swipes for advanced moves!
           </Text>
         </View>
 
@@ -221,60 +220,62 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#000",
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingTop: 60,
     paddingBottom: 40,
   },
   header: {
-    marginBottom: 40,
+    marginBottom: 32,
+    alignItems: "center",
   },
   title: {
-    fontSize: 34,
-    fontWeight: "800",
+    fontSize: 32,
+    fontWeight: "900",
     color: "#00FF00",
     textAlign: "center",
-    marginBottom: 12,
+    marginBottom: 8,
     textShadowColor: "#00FF00",
     textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 10,
+    textShadowRadius: 12,
+    letterSpacing: -0.5,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 15,
     color: "#00AA00",
     textAlign: "center",
-    lineHeight: 24,
+    letterSpacing: 0.2,
   },
   demoArea: {
     flex: 1,
     justifyContent: "center",
-    gap: 20,
+    gap: 14,
   },
   gestureCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(0, 50, 0, 0.2)",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
     borderWidth: 2,
     borderColor: "#00AA00",
     borderRadius: 16,
-    padding: 20,
-    gap: 20,
+    padding: 16,
+    gap: 16,
   },
   highlightedCard: {
     borderColor: "#00FF00",
-    backgroundColor: "rgba(0, 100, 0, 0.15)",
+    backgroundColor: "rgba(0, 255, 0, 0.05)",
     shadowColor: "#00FF00",
     shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.4,
-    shadowRadius: 12,
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
   },
   gestureIcon: {
-    width: 80,
-    height: 80,
+    width: 72,
+    height: 72,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 12,
-    backgroundColor: "rgba(0, 20, 0, 0.5)",
-    borderWidth: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.6)",
+    borderWidth: 2,
     borderColor: "#00AA00",
   },
   rotateIcon: {
@@ -282,39 +283,42 @@ const styles = StyleSheet.create({
   },
   gestureInfo: {
     flex: 1,
-    gap: 4,
+    gap: 2,
   },
   gestureName: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "700",
     color: "#00FF00",
+    letterSpacing: 0.3,
   },
   gestureDescription: {
-    fontSize: 15,
+    fontSize: 14,
     color: "#00AA00",
+    letterSpacing: 0.2,
   },
   footer: {
-    gap: 20,
-    marginTop: 20,
+    gap: 16,
+    marginTop: 16,
   },
   tipCard: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(0, 50, 0, 0.15)",
+    backgroundColor: "rgba(0, 50, 0, 0.2)",
     borderWidth: 1,
     borderColor: "#00AA00",
     borderRadius: 12,
-    padding: 16,
-    gap: 12,
+    padding: 14,
+    gap: 10,
   },
   tipIcon: {
-    fontSize: 24,
+    fontSize: 20,
   },
   tipText: {
     flex: 1,
-    fontSize: 14,
+    fontSize: 13,
     color: "#00AA00",
-    lineHeight: 20,
+    lineHeight: 18,
+    letterSpacing: 0.2,
   },
   tipBold: {
     fontWeight: "700",
@@ -322,18 +326,18 @@ const styles = StyleSheet.create({
   },
   continueButton: {
     backgroundColor: "#00FF00",
-    paddingVertical: 18,
+    paddingVertical: 16,
     borderRadius: 12,
     alignItems: "center",
     shadowColor: "#00FF00",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.4,
-    shadowRadius: 12,
+    shadowRadius: 10,
   },
   continueButtonText: {
     color: "#000",
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: 17,
+    fontWeight: "900",
     letterSpacing: 0.5,
   },
 });
