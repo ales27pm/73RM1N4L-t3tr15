@@ -45,7 +45,7 @@ const OnboardingPermissionsScreen = ({ navigation }: OnboardingPermissionsScreen
       registerNotificationSchedule(null);
     }
     goToNext();
-    navigation.replace("OnboardingTutorial");
+    navigation.replace("OnboardingGestures");
   };
 
   return (

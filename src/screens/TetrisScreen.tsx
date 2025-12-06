@@ -252,11 +252,19 @@ export default function TetrisScreen() {
         runOnJS(playSfx)("move");
       }
       accY.value += dy;
+      // Swipe down for soft drop
       while (accY.value >= CELL) {
         runOnJS(dropPiece)();
         runOnJS(hapticLight)();
         runOnJS(playSfx)("soft");
         accY.value -= CELL;
+      }
+      // Swipe up for rotation
+      while (accY.value <= -CELL * 1.5) {
+        runOnJS(rotatePiece)();
+        runOnJS(hapticMedium)();
+        if (enableSfx) runOnJS(playSfx)("rotate");
+        accY.value += CELL * 1.5; // Reset to prevent multiple rotations
       }
     })
     .onEnd(() => {
@@ -268,20 +276,8 @@ export default function TetrisScreen() {
       runOnJS(stopSlash)();
     });
 
-  // Two-finger tap for rotation
-  const twoFingerTap = Gesture.Tap()
-    .numberOfTaps(1)
-    .maxDuration(300)
-    .minPointers(2)
-    .onEnd(() => {
-      if (pausedSV.value || gameOverSV.value) return;
-      runOnJS(rotatePiece)();
-      runOnJS(hapticMedium)();
-      if (enableSfx) runOnJS(playSfx)("rotate");
-    });
-
-  // Simple gesture composition - just pan and two-finger tap
-  const composedGesture = Gesture.Simultaneous(twoFingerTap, pan);
+  // Simple gesture composition - pan handles all gestures
+  const composedGesture = Gesture.Exclusive(pan);
 
   const gridAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -664,7 +660,7 @@ export default function TetrisScreen() {
 
       {showHints && (
         <View style={styles.hintsOverlay}>
-          <Text style={styles.hintText}>Swipe to move left/right/down • Two-finger tap to rotate</Text>
+          <Text style={styles.hintText}>Swipe left/right to move • Swipe down to drop • Swipe up to rotate</Text>
           <Pressable onPress={hideHints} style={styles.hintDismiss}>
             <Text style={styles.hintDismissText}>×</Text>
           </Pressable>

@@ -1,4 +1,4 @@
-export const ONBOARDING_STEPS = ["intro", "permissions", "tutorial"] as const;
+export const ONBOARDING_STEPS = ["intro", "permissions", "gestures", "tutorial"] as const;
 
 export type OnboardingStep = (typeof ONBOARDING_STEPS)[number];
 

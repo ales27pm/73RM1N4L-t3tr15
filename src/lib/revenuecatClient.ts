@@ -56,6 +56,7 @@ const guardRevenueCatUsage = async <T>(
   operation: () => Promise<T>,
 ): Promise<RevenueCatResult<T>> => {
   if (isWeb) {
+    // eslint-disable-next-line no-console
     console.log(
       `${LOG_PREFIX} ${action} skipped: payments are not supported on web.`,
     );
@@ -63,6 +64,7 @@ const guardRevenueCatUsage = async <T>(
   }
 
   if (!isEnabled) {
+    // eslint-disable-next-line no-console
     console.log(`${LOG_PREFIX} ${action} skipped: RevenueCat not configured`);
     return { ok: false, reason: "not_configured" };
   }
@@ -71,6 +73,7 @@ const guardRevenueCatUsage = async <T>(
     const data = await operation();
     return { ok: true, data };
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.log(`${LOG_PREFIX} ${action} failed:`, error);
     return { ok: false, reason: "sdk_error", error };
   }
@@ -82,16 +85,18 @@ if (isEnabled) {
     // Set up custom log handler to suppress Test Store and expected errors
     // These are non-errors thrown as errors by the SDK, and will be confusing to the user.
     Purchases.setLogHandler((logLevel, message) => {
-
       // Log ERROR messages normally
       if (logLevel === Purchases.LOG_LEVEL.ERROR) {
+        // eslint-disable-next-line no-console
         console.log(LOG_PREFIX, message);
       }
     });
 
     Purchases.configure({ apiKey: apiKey! });
+    // eslint-disable-next-line no-console
     console.log(`${LOG_PREFIX} SDK initialized successfully`);
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error(`${LOG_PREFIX} Failed to initialize:`, error);
   }
 }

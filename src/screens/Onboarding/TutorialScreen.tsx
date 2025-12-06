@@ -26,13 +26,13 @@ const OnboardingTutorialScreen = () => {
     <View style={styles.container}>
       <Text style={styles.title}>You&apos;re ready!</Text>
       <Text style={styles.subtitle}>
-        Rotate with taps, swipe to move, and drop pieces by swiping down. Keep an eye on your combo meter to maximize
-        rewards.
+        Remember: swipe left/right to move, swipe down to drop, and swipe up to rotate. Keep an eye on your combo
+        meter to maximize rewards.
       </Text>
       <View style={styles.tipCard}>
         <Text style={styles.tipTitle}>Pro tips</Text>
-        <Text style={styles.tipText}>• Hold pieces with a long press on the board.</Text>
-        <Text style={styles.tipText}>• Hard drop with a double tap.</Text>
+        <Text style={styles.tipText}>• Hold pieces by tapping the HOLD button.</Text>
+        <Text style={styles.tipText}>• Combine gestures for advanced combos.</Text>
         <Text style={styles.tipText}>• Keep streaks alive to earn rare rewards.</Text>
       </View>
       <Pressable

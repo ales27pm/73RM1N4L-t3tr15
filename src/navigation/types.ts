@@ -9,6 +9,7 @@ export type RootStackParamList = {
 export type OnboardingStackParamList = {
   OnboardingIntro: undefined;
   OnboardingPermissions: undefined;
+  OnboardingGestures: undefined;
   OnboardingTutorial: undefined;
 };
 

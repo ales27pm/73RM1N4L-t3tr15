@@ -213,12 +213,11 @@ For EAS cloud builds, a prebuild hook (`scripts/eas-prebuild-ios.sh`) automatica
 
 ## 🎯 Game Controls
 
-### Touch Controls
-- **Tap Left/Right**: Move piece horizontally
+### Touch Controls (Gestures)
+- **Swipe Left/Right**: Move piece horizontally
 - **Swipe Down**: Soft drop
-- **Swipe Up**: Hard drop
-- **Tap Rotate**: Rotate piece clockwise
-- **Tap Hold**: Store current piece
+- **Swipe Up**: Rotate piece clockwise
+- **Tap Hold Button**: Store current piece
 
 ### Keyboard (Web/Simulator)
 - **Arrow Left/Right**: Move piece
